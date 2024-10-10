@@ -4,14 +4,14 @@ import 'package:flutter/material.dart';
 // import 'package:six_cinq_barre/pages/gsheet_crud.dart';
 import 'package:intl/intl.dart';
 
-class EventPage extends StatefulWidget {
-  const EventPage({super.key});
+class RehearsalPage extends StatefulWidget {
+  const RehearsalPage({super.key});
 
   @override
-  State<EventPage> createState() => _EventPageState();
+  State<RehearsalPage> createState() => _RehearsalPageState();
 }
 
-class _EventPageState extends State<EventPage> {
+class _RehearsalPageState extends State<RehearsalPage> {
   final inputText = TextEditingController();
   List dataFromSheet = [];
   String? closestDate;
