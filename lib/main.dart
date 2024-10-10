@@ -1,5 +1,5 @@
 import 'package:six_cinq_barre/pages/concert_page.dart';
-import 'package:six_cinq_barre/pages/event_page.dart';
+import 'package:six_cinq_barre/pages/rehearsal_page.dart';
 import 'package:flutter/material.dart';
 import 'pages/home_page.dart';
 
@@ -56,7 +56,7 @@ class _MyAppState extends State<MyApp> {
         ),
         body: [
           const HomePage(),
-          const EventPage(),
+          const RehearsalPage(),
           const ConcertPage(),
         ][_currentIndex],
         bottomNavigationBar: BottomNavigationBar(
