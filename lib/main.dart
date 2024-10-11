@@ -1,22 +1,11 @@
-import 'package:six_cinq_barre/pages/concert_page.dart';
-import 'package:six_cinq_barre/pages/rehearsal_page.dart';
+import 'package:app_six_cinq_barre/pages/concert_page.dart';
+import 'package:app_six_cinq_barre/pages/rehearsal_page.dart';
 import 'package:flutter/material.dart';
 import 'pages/home_page.dart';
-
-// import 'package:firebase_core/firebase_core.dart';
-// import 'firebase_options.dart';
 import 'package:intl/date_symbol_data_local.dart';
 import 'dart:async';
-// import 'dart:math';
-// import 'package:asynconf/pages/gsheet_crud.dart';
-import 'package:six_cinq_barre/gsheet_setup.dart';
-
-// void main() async {
-//   WidgetsFlutterBinding.ensureInitialized();
-
-//   await Firebase.initializeApp(
-//     options: DefaultFirebaseOptions.currentPlatform,
-// );
+import 'package:app_six_cinq_barre/gsheet_setup.dart';
+import 'package:curved_navigation_bar/curved_navigation_bar.dart';
 
 Future main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -36,7 +25,7 @@ class MyApp extends StatefulWidget {
 class _MyAppState extends State<MyApp> {
   int _currentIndex = 0;
 
-  setCurrentIndex(int index) {
+  void setCurrentIndex(int index) {
     setState(() {
       _currentIndex = index;
     });
@@ -48,41 +37,59 @@ class _MyAppState extends State<MyApp> {
       debugShowCheckedModeBanner: true,
       home: Scaffold(
         appBar: AppBar(
+          centerTitle: true,
+          backgroundColor: Colors.cyan,
           title: const [
             Text("Accueil"),
             Text("Liste des Répétitions"),
             Text("Concerts"),
           ][_currentIndex],
         ),
-        body: [
-          const HomePage(),
-          const RehearsalPage(),
-          const ConcertPage(),
-        ][_currentIndex],
-        bottomNavigationBar: BottomNavigationBar(
-          currentIndex: _currentIndex,
-          onTap: (index) => setCurrentIndex(index),
-          type: BottomNavigationBarType.fixed,
-          selectedItemColor: const Color.fromARGB(255, 223, 149, 12),
-          unselectedItemColor: Colors.grey,
-          iconSize: 32,
-          elevation: 20,
-          items: const [
-            BottomNavigationBarItem(
-              icon: Icon(Icons.home),
-              label: 'Accueil',
+        body: Column(
+          children: [
+            // Ligne de séparation
+            Container(
+              height: 1, // Hauteur de la ligne
+              color: Colors.black, // Couleur de la ligne
             ),
-            BottomNavigationBarItem(
-              icon: Icon(Icons.sports_bar),
-              label: 'Répétitions',
-            ),
-            BottomNavigationBarItem(
-              icon: Icon(Icons.music_note),
-              label: 'Concerts',
+            Expanded(
+              child: [
+                const HomePage(),
+                const RehearsalPage(),
+                const ConcertPage(),
+              ][_currentIndex],
             ),
           ],
         ),
+        bottomNavigationBar: CurvedNavigationBar(
+          index: _currentIndex,
+          height: 60.0,
+          items: <Widget>[
+            _buildNavItem(Icons.home, 'Accueil', 0),
+            _buildNavItem(Icons.sports_bar, 'Répétitions', 1),
+            _buildNavItem(Icons.music_note, 'Concerts', 2),
+          ],
+          color: Colors.cyan,
+          buttonBackgroundColor: Colors.white,
+          backgroundColor: Colors.transparent,
+          animationCurve: Curves.easeInOut,
+          animationDuration: const Duration(milliseconds: 300),
+          onTap: (index) => setCurrentIndex(index),
+        ),
       ),
+    );
+  }
+
+  Widget _buildNavItem(IconData icon, String label, int index) {
+    bool isSelected = _currentIndex == index;
+    return Column(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        const SizedBox(height: 6), // Espacement entre l'icône et le haut de la CurvedNavigationBar
+        Icon(icon, size: 30, color: isSelected ? Colors.black : Colors.white),
+        const SizedBox(height: 1), // Espacement entre l'icône et le texte
+        Text(label, style: TextStyle(color: isSelected ? Colors.black : Colors.white)),
+      ],
     );
   }
 }
