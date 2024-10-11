@@ -1,4 +1,4 @@
-import 'package:six_cinq_barre/gsheet_setup.dart';
+import 'package:app_six_cinq_barre/gsheet_setup.dart';
 
 insertDataIntoSheet(userDetailsList) async {
   await gsheetCrudUserDetails!.values.map.appendRows(userDetailsList);

@@ -9,7 +9,7 @@ class ConcertPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-        color: Colors.white,
+        color: Colors.black,
         child: Center(
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
@@ -29,16 +29,17 @@ class ConcertPage extends StatelessWidget {
               SvgPicture.asset(
                 "assets/images/65barre_conductor.svg",
                 colorFilter:
-                    const ColorFilter.mode(Colors.orange, BlendMode.srcIn),
+                    const ColorFilter.mode(Colors.cyan, BlendMode.srcIn),
               ),
               const Text(
                 "Concerts",
-                style: TextStyle(fontSize: 42, fontFamily: 'Poppins'),
+                style: TextStyle(fontSize: 42, fontFamily: 'Poppins', color: Colors.cyan),
               ),
               const Text(
-                "Saison 2024-2025.",
+                "Saison 2024-2025",
                 style: TextStyle(
                   fontSize: 24,
+                  color: Colors.cyan,
                 ),
                 textAlign: TextAlign.center,
               ),
