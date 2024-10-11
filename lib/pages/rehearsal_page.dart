@@ -88,7 +88,7 @@ class _RehearsalPageState extends State<RehearsalPage> {
         child: Stack(
           children: [
             // Ajout des cercles de couleurs aléatoires avec flou
-            ...List.generate(20, (index) {
+            ...List.generate(10, (index) {
               final random = Random();
               final size = random.nextDouble() * 100 +
                   50; // Taille des cercles entre 50 et 150 pixels
@@ -109,8 +109,7 @@ class _RehearsalPageState extends State<RehearsalPage> {
                 top: top,
                 left: left,
                 child: BackdropFilter(
-                  filter:
-                      ImageFilter.blur(sigmaX: 5.0, sigmaY: 5.0), // Flou ajouté
+                  filter: ImageFilter.blur(sigmaX: 5, sigmaY: 0), // Flou ajouté
                   child: Container(
                     width: size,
                     height: size,
