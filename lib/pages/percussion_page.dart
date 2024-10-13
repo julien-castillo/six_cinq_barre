@@ -38,8 +38,10 @@ class _PercussionPageState extends State<PercussionPage> {
     final List<Map<String, String>> allData =
         (await gsheetAdminDetails!.values.map.allRows())!;
     setState(() {
-      percussionMusicians =
-          allData.where((row) => row['pupitre'] == 'Percussions' || row['pupitre'] == 'Harpe').toList();
+      percussionMusicians = allData
+          .where((row) =>
+              row['pupitre'] == 'Percussions' || row['pupitre'] == 'Harpe')
+          .toList();
     });
   }
 
@@ -61,7 +63,8 @@ class _PercussionPageState extends State<PercussionPage> {
                   final musicien = percussionMusicians[index];
                   return _buildGlassmorphicCard(
                     context,
-                    _getDirectImageUrl(musicien["photo"]), // Convertir l'URL ici
+                    _getDirectImageUrl(
+                        musicien["photo"]), // Convertir l'URL ici
                     musicien["musicien"]!,
                     musicien["instrument"]!,
                     formatDateFromSheet(musicien['birthday']!),
@@ -69,7 +72,7 @@ class _PercussionPageState extends State<PercussionPage> {
                   );
                 },
                 options: CarouselOptions(
-                  height: 400,
+                  height: 500,
                   enlargeCenterPage: true,
                   autoPlay: false,
                   autoPlayInterval: const Duration(seconds: 3),
@@ -93,23 +96,23 @@ class _PercussionPageState extends State<PercussionPage> {
 
   // Nouvelle fonction pour obtenir l'URL directe
   String _getDirectImageUrl(String? photoUrl) {
-  if (photoUrl == null || photoUrl.isEmpty) {
-    return '';
-  }
-  
-  // Extraire l'identifiant du fichier à partir de l'URL
-  final RegExp regExp = RegExp(r'/d/([^/]+)');
-  final match = regExp.firstMatch(photoUrl);
+    if (photoUrl == null || photoUrl.isEmpty) {
+      return '';
+    }
 
-  if (match != null && match.groupCount > 0) {
-    String fileId = match.group(1)!; // Récupérer l'identifiant
-    return 'https://drive.google.com/uc?id=$fileId'; // Formater l'URL correcte
-  } else {
-    return ''; // Retourner une chaîne vide si l'identifiant n'est pas trouvé
-  }
-}
+    // Extraire l'identifiant du fichier à partir de l'URL
+    final RegExp regExp = RegExp(r'/d/([^/]+)');
+    final match = regExp.firstMatch(photoUrl);
 
-Widget _buildGlassmorphicCard(
+    if (match != null && match.groupCount > 0) {
+      String fileId = match.group(1)!; // Récupérer l'identifiant
+      return 'https://drive.google.com/uc?id=$fileId'; // Formater l'URL correcte
+    } else {
+      return ''; // Retourner une chaîne vide si l'identifiant n'est pas trouvé
+    }
+  }
+
+  Widget _buildGlassmorphicCard(
     BuildContext context,
     String? photoUrl, // Accepte photoUrl comme nullable
     String nom,
@@ -138,8 +141,8 @@ Widget _buildGlassmorphicCard(
                 ClipOval(
                   child: Image.network(
                     photoUrl, // Utilisez Image.network pour charger l'image depuis l'URL
-                    height: 100,
-                    width: 100,
+                    height: 200,
+                    width: 200,
                     fit: BoxFit.cover,
                     alignment: Alignment.topCenter,
                   ),
@@ -148,9 +151,11 @@ Widget _buildGlassmorphicCard(
                 ClipOval(
                   child: SvgPicture.asset(
                     'assets/images/anonymous.svg', // Remplacez par le chemin de votre SVG
-                    height: 100,
-                    width: 100,
+                    height: 200,
+                    width: 200,
                     fit: BoxFit.cover,
+                    colorFilter:
+                        const ColorFilter.mode(Colors.cyan, BlendMode.srcIn),
                   ),
                 ),
               const SizedBox(height: 16),
@@ -171,13 +176,16 @@ Widget _buildGlassmorphicCard(
               ),
               const Divider(color: Colors.grey),
               Text(
-                birthday.isEmpty ? "Date de naissance: Non communiquée" : "Date de naissance: $birthday",
+                birthday.isEmpty
+                    ? "Date de naissance: Non communiquée"
+                    : "Date de naissance: $birthday",
                 style: TextStyle(
                   color: Colors.white,
                   fontSize: 16,
                   fontStyle: birthday.isEmpty
                       ? FontStyle.italic
-                      : FontStyle.normal, // Changer le style en italique si birthday est vide
+                      : FontStyle
+                          .normal, // Changer le style en italique si birthday est vide
                 ),
               ),
               const Divider(color: Colors.grey),
@@ -188,7 +196,8 @@ Widget _buildGlassmorphicCard(
                   fontSize: 16,
                   fontStyle: email.isEmpty
                       ? FontStyle.italic
-                      : FontStyle.normal, // Changer le style en italique si email est vide
+                      : FontStyle
+                          .normal, // Changer le style en italique si email est vide
                 ),
               ),
             ],
@@ -197,7 +206,6 @@ Widget _buildGlassmorphicCard(
       ),
     );
   }
-
 
   Widget _buildGlassmorphicButton(
       BuildContext context, IconData icon, String title) {
