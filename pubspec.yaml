@@ -43,6 +43,8 @@ dependencies:
   gsheets: ^0.5.0
   flutter_card_swiper: ^7.0.2
   curved_navigation_bar: ^1.0.6
+  http: ^1.2.2
+  carousel_slider: ^5.0.0
 
 dev_dependencies:
   flutter_test:
