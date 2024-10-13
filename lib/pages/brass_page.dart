@@ -2,6 +2,7 @@ import 'package:app_six_cinq_barre/gsheet_setup.dart';
 import 'package:app_six_cinq_barre/main.dart';
 import 'package:flutter/material.dart';
 import 'package:carousel_slider/carousel_slider.dart';
+import 'package:flutter_svg/svg.dart';
 import 'dart:ui';
 import 'package:intl/intl.dart';
 
@@ -67,7 +68,7 @@ class _BrassPageState extends State<BrassPage> {
                   );
                 },
                 options: CarouselOptions(
-                  height: 400,
+                  height: 500,
                   enlargeCenterPage: true,
                   autoPlay: false,
                   autoPlayInterval: const Duration(seconds: 3),
@@ -133,14 +134,25 @@ class _BrassPageState extends State<BrassPage> {
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
               // Vérifiez si photoUrl n'est pas vide et non nul
-              if (photoUrl!.isNotEmpty)
+              if (photoUrl != null && photoUrl.isNotEmpty)
                 ClipOval(
                   child: Image.network(
                     photoUrl, // Utilisez Image.network pour charger l'image depuis l'URL
-                    height: 100,
-                    width: 100,
+                    height: 200,
+                    width: 200,
                     fit: BoxFit.cover,
                     alignment: Alignment.topCenter,
+                  ),
+                )
+              else
+                ClipOval(
+                  child: SvgPicture.asset(
+                    'assets/images/anonymous.svg', // Remplacez par le chemin de votre SVG
+                    height: 200,
+                    width: 200,
+                    fit: BoxFit.cover,
+                    colorFilter:
+                        const ColorFilter.mode(Colors.cyan, BlendMode.srcIn),
                   ),
                 ),
               const SizedBox(height: 16),
@@ -161,13 +173,16 @@ class _BrassPageState extends State<BrassPage> {
               ),
               const Divider(color: Colors.grey),
               Text(
-                birthday.isEmpty ? "Date de naissance: Non communiquée" : "Date de naissance: $birthday",
+                birthday.isEmpty
+                    ? "Date de naissance: Non communiquée"
+                    : "Date de naissance: $birthday",
                 style: TextStyle(
                   color: Colors.white,
                   fontSize: 16,
                   fontStyle: birthday.isEmpty
                       ? FontStyle.italic
-                      : FontStyle.normal, // Changer le style en italique si birthday est vide
+                      : FontStyle
+                          .normal, // Changer le style en italique si birthday est vide
                 ),
               ),
               const Divider(color: Colors.grey),
@@ -178,7 +193,8 @@ class _BrassPageState extends State<BrassPage> {
                   fontSize: 16,
                   fontStyle: email.isEmpty
                       ? FontStyle.italic
-                      : FontStyle.normal, // Changer le style en italique si email est vide
+                      : FontStyle
+                          .normal, // Changer le style en italique si email est vide
                 ),
               ),
             ],
