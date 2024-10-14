@@ -60,7 +60,8 @@ class _StringsPageState extends State<StringsPage> {
                   final musicien = cordesMusicians[index];
                   return _buildGlassmorphicCard(
                     context,
-                    _getDirectImageUrl(musicien["photo"]), // Convertir l'URL ici
+                    _getDirectImageUrl(
+                        musicien["photo"]), // Convertir l'URL ici
                     musicien["musicien"]!,
                     musicien["instrument"]!,
                     formatDateFromSheet(musicien['birthday']!),
@@ -96,18 +97,16 @@ class _StringsPageState extends State<StringsPage> {
     return '';
   }
   
-  // Extraire l'identifiant du fichier à partir de l'URL
   final RegExp regExp = RegExp(r'/d/([^/]+)');
   final match = regExp.firstMatch(photoUrl);
 
   if (match != null && match.groupCount > 0) {
-    String fileId = match.group(1)!; // Récupérer l'identifiant
-    return 'https://drive.google.com/uc?id=$fileId'; // Formater l'URL correcte
+    String fileId = match.group(1)!;
+    return 'https://drive.google.com/uc?id=$fileId&export=view';
   } else {
-    return ''; // Retourner une chaîne vide si l'identifiant n'est pas trouvé
+    return '';
   }
 }
-
 
   Widget _buildGlassmorphicCard(
     BuildContext context,
