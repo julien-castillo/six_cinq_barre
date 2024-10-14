@@ -100,8 +100,21 @@ class _StringsPageState extends State<StringsPage> {
 
     try {
       final response = await http.get(Uri.parse(photoUrl));
+      print("Statut de la réponse: ${response.statusCode}");
+      print("Type de contenu: ${response.headers['content-type']}");
+
+      // Vérifier que la requête a réussi et que le type de contenu est bien une image
       if (response.statusCode == 200) {
-        return response.bodyBytes;
+        // Vérification supplémentaire pour le type de contenu
+        final contentType = response.headers['content-type'];
+        if (contentType != null && contentType.startsWith('image/')) {
+          print("Image récupérée avec succès.");
+          return response.bodyBytes; // Retourner les données de l'image
+        } else {
+          print("Le type de contenu n'est pas une image.");
+        }
+      } else {
+        print("Erreur lors du chargement de l'image: ${response.statusCode}");
       }
     } catch (e) {
       print("Erreur de chargement de l'image : $e");
