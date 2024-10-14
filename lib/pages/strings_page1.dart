@@ -3,8 +3,6 @@ import 'package:app_six_cinq_barre/main.dart';
 import 'package:flutter/material.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter_svg/svg.dart';
-import 'package:http/http.dart' as http;
-import 'dart:typed_data';
 import 'dart:ui';
 import 'package:intl/intl.dart';
 
@@ -62,7 +60,8 @@ class _StringsPageState extends State<StringsPage> {
                   final musicien = cordesMusicians[index];
                   return _buildGlassmorphicCard(
                     context,
-                    musicien["photo"], // Passer l'URL de la photo ici
+                    _getDirectImageUrl(
+                        musicien["photo"]), // Convertir l'URL ici
                     musicien["musicien"]!,
                     musicien["instrument"]!,
                     formatDateFromSheet(musicien['birthday']!),
@@ -92,22 +91,22 @@ class _StringsPageState extends State<StringsPage> {
     );
   }
 
-  // Nouvelle fonction pour télécharger l'image à partir de l'URL
-  Future<Uint8List?> _fetchImage(String? photoUrl) async {
-    if (photoUrl == null || photoUrl.isEmpty) {
-      return null;
-    }
-
-    try {
-      final response = await http.get(Uri.parse(photoUrl));
-      if (response.statusCode == 200) {
-        return response.bodyBytes;
-      }
-    } catch (e) {
-      print("Erreur de chargement de l'image : $e");
-    }
-    return null;
+  // Nouvelle fonction pour obtenir l'URL directe
+  String _getDirectImageUrl(String? photoUrl) {
+  if (photoUrl == null || photoUrl.isEmpty) {
+    return '';
   }
+  
+  final RegExp regExp = RegExp(r'/d/([^/]+)');
+  final match = regExp.firstMatch(photoUrl);
+
+  if (match != null && match.groupCount > 0) {
+    String fileId = match.group(1)!;
+    return 'https://drive.google.com/uc?id=$fileId&export=view';
+  } else {
+    return '';
+  }
+}
 
   Widget _buildGlassmorphicCard(
     BuildContext context,
@@ -133,34 +132,28 @@ class _StringsPageState extends State<StringsPage> {
             mainAxisSize: MainAxisSize.min,
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
-              FutureBuilder<Uint8List?>(
-                future: _fetchImage(photoUrl),
-                builder: (context, snapshot) {
-                  if (snapshot.connectionState == ConnectionState.waiting) {
-                    return const CircularProgressIndicator();
-                  } else if (snapshot.hasData) {
-                    return ClipOval(
-                      child: Image.memory(
-                        snapshot.data!,
-                        height: 200,
-                        width: 200,
-                        fit: BoxFit.cover,
-                      ),
-                    );
-                  } else {
-                    return ClipOval(
-                      child: SvgPicture.asset(
-                        'assets/images/anonymous.svg',
-                        height: 200,
-                        width: 200,
-                        fit: BoxFit.cover,
-                        colorFilter: const ColorFilter.mode(
-                            Colors.cyan, BlendMode.srcIn),
-                      ),
-                    );
-                  }
-                },
-              ),
+              // Vérifiez si photoUrl n'est pas vide et non nul
+              if (photoUrl != null && photoUrl.isNotEmpty)
+                ClipOval(
+                  child: Image.network(
+                    photoUrl, // Utilisez Image.network pour charger l'image depuis l'URL
+                    height: 200,
+                    width: 200,
+                    fit: BoxFit.cover,
+                    alignment: Alignment.topCenter,
+                  ),
+                )
+              else
+                ClipOval(
+                  child: SvgPicture.asset(
+                    'assets/images/anonymous.svg', // Remplacez par le chemin de votre SVG
+                    height: 200,
+                    width: 200,
+                    fit: BoxFit.cover,
+                    colorFilter:
+                        const ColorFilter.mode(Colors.cyan, BlendMode.srcIn),
+                  ),
+                ),
               const SizedBox(height: 16),
               Text(
                 nom,
@@ -185,7 +178,10 @@ class _StringsPageState extends State<StringsPage> {
                 style: TextStyle(
                   color: Colors.white,
                   fontSize: 16,
-                  fontStyle: birthday.isEmpty ? FontStyle.italic : FontStyle.normal,
+                  fontStyle: birthday.isEmpty
+                      ? FontStyle.italic
+                      : FontStyle
+                          .normal, // Changer le style en italique si birthday est vide
                 ),
               ),
               const Divider(color: Colors.grey),
@@ -194,7 +190,10 @@ class _StringsPageState extends State<StringsPage> {
                 style: TextStyle(
                   color: Colors.white,
                   fontSize: 16,
-                  fontStyle: email.isEmpty ? FontStyle.italic : FontStyle.normal,
+                  fontStyle: email.isEmpty
+                      ? FontStyle.italic
+                      : FontStyle
+                          .normal, // Changer le style en italique si email est vide
                 ),
               ),
             ],
