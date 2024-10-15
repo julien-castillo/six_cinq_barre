@@ -229,7 +229,7 @@ class _MusiciansPageState extends State<MusiciansPage> {
                       'assets/images/timpani_harp.svg',
                       const Color.fromARGB(0, 0, 0, 0),
                       const Color(0xFF048B9A),
-                      const PercussionPage(),
+                      const PercussionsPage(),
                       const BorderRadius.only(
                         topRight: Radius.circular(30),
                         bottomLeft: Radius.circular(30),
