@@ -138,7 +138,7 @@ class _MusiciansPageState extends State<MusiciansPage> {
   // Fonction pour récupérer les données depuis Google Sheets
   Future<List<Map<String, dynamic>>> fetchGoogleSheetsData() async {
     // Récupérer les données depuis Google Sheets
-    var dataFromAdminSheet = (await gsheetAdminDetails!.values.map.allRows())!;
+    var dataFromAdminSheet = (await gsheetMusiciansDetails!.values.map.allRows())!;
 
     // Transformer les données pour extraire les noms et les anniversaires
     List<Map<String, dynamic>> musiciansData = [];

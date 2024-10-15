@@ -3,10 +3,9 @@ import 'package:app_six_cinq_barre/main.dart';
 import 'package:flutter/material.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter_svg/svg.dart';
-import 'package:http/http.dart' as http;
-import 'dart:typed_data';
 import 'dart:ui';
 import 'package:intl/intl.dart';
+import 'package:app_six_cinq_barre/gen/assets.gen.dart';
 
 class StringsPage extends StatefulWidget {
   const StringsPage({super.key});
@@ -37,11 +36,56 @@ class _StringsPageState extends State<StringsPage> {
 
   Future<void> readDataStringsFromAdminSheet() async {
     final List<Map<String, String>> allData =
-        (await gsheetAdminDetails!.values.map.allRows())!;
+        (await gsheetMusiciansDetails!.values.map.allRows())!;
     setState(() {
       cordesMusicians =
           allData.where((row) => row['pupitre'] == 'Cordes').toList();
     });
+  }
+
+  String normalizeName(String name) {
+    const Map<String, String> accentsMap = {
+      'à': 'a', 'â': 'a', 'ä': 'a', 'á': 'a', 'ã': 'a',
+      'è': 'e', 'ê': 'e', 'ë': 'e', 'é': 'e',
+      'ì': 'i', 'î': 'i', 'ï': 'i',
+      'ò': 'o', 'ô': 'o', 'ö': 'o', 'ó': 'o', 'õ': 'o',
+      'ù': 'u', 'û': 'u', 'ü': 'u', 'ú': 'u',
+      'ç': 'c', 'ñ': 'n', 'ý': 'y', 'ÿ': 'y',
+      'À': 'a', 'Â': 'a', 'Ä': 'a', 'Á': 'a', 'Ã': 'a',
+      'È': 'e', 'Ê': 'e', 'Ë': 'e', 'É': 'e',
+      'Ì': 'i', 'Î': 'i', 'Ï': 'i',
+      'Ò': 'o', 'Ô': 'o', 'Ö': 'o', 'Ó': 'o', 'Õ': 'o',
+      'Ù': 'u', 'Û': 'u', 'Ü': 'u', 'Ú': 'u',
+      'Ç': 'c', 'Ñ': 'n', 'Ý': 'y', 'Ÿ': 'y',
+    };
+
+    accentsMap.forEach((accentedChar, replacement) {
+      name = name.replaceAll(accentedChar, replacement);
+    });
+
+    return name
+        .toLowerCase()
+        .replaceAll(' ', '_')
+        .replaceAll(RegExp(r'[^a-z0-9_]'), '');
+  }
+
+  final List<String> availableImages = 
+      Assets.images.musiciens.values.map((image) => image.path.split('/').last).toList();
+
+  String _getLocalImageUrl(String musicianName) {
+    final normalizedName = normalizeName(musicianName);
+    final List<String> extensions = ['.png', '.jpg'];
+
+    for (var ext in extensions) {
+      final fileName = '$normalizedName$ext';
+      print(availableImages);
+
+      if (availableImages.contains(fileName)) {
+        return 'assets/images/musiciens/$fileName';
+      }
+    }
+return "";
+    // return 'assets/images/anonymous.png';
   }
 
   @override
@@ -62,7 +106,7 @@ class _StringsPageState extends State<StringsPage> {
                   final musicien = cordesMusicians[index];
                   return _buildGlassmorphicCard(
                     context,
-                    musicien["photo"], // Passer l'URL de la photo ici
+                    _getLocalImageUrl(musicien["musicien"]!),
                     musicien["musicien"]!,
                     musicien["instrument"]!,
                     formatDateFromSheet(musicien['birthday']!),
@@ -92,130 +136,111 @@ class _StringsPageState extends State<StringsPage> {
     );
   }
 
-  // Nouvelle fonction pour télécharger l'image à partir de l'URL
-  Future<Uint8List?> _fetchImage(String? photoUrl) async {
-    if (photoUrl == null || photoUrl.isEmpty) {
-      return null;
-    }
-
-    try {
-      final response = await http.get(Uri.parse(photoUrl));
-      print("Statut de la réponse: ${response.statusCode}");
-      print("Type de contenu: ${response.headers['content-type']}");
-
-      // Vérifier que la requête a réussi et que le type de contenu est bien une image
-      if (response.statusCode == 200) {
-        // Vérification supplémentaire pour le type de contenu
-        final contentType = response.headers['content-type'];
-        if (contentType != null && contentType.startsWith('image/')) {
-          print("Image récupérée avec succès.");
-          return response.bodyBytes; // Retourner les données de l'image
-        } else {
-          print("Le type de contenu n'est pas une image.");
-        }
-      } else {
-        print("Erreur lors du chargement de l'image: ${response.statusCode}");
-      }
-    } catch (e) {
-      print("Erreur de chargement de l'image : $e");
-    }
-    return null;
-  }
-
   Widget _buildGlassmorphicCard(
-    BuildContext context,
-    String? photoUrl, // Accepte photoUrl comme nullable
-    String nom,
-    String instrument,
-    String birthday,
-    String email,
-  ) {
-    return ClipRRect(
-      borderRadius: BorderRadius.circular(20.0),
-      child: BackdropFilter(
-        filter: ImageFilter.blur(sigmaX: 30.0, sigmaY: 30.0),
-        child: Container(
-          width: MediaQuery.of(context).size.width * 0.8,
-          padding: const EdgeInsets.all(12.0),
-          decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(20.0),
-            color: Colors.white.withOpacity(0.2),
-            border: Border.all(color: Colors.cyan, width: 0.8),
-          ),
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              FutureBuilder<Uint8List?>(
-                future: _fetchImage(photoUrl),
-                builder: (context, snapshot) {
-                  if (snapshot.connectionState == ConnectionState.waiting) {
-                    return const CircularProgressIndicator();
-                  } else if (snapshot.hasData) {
-                    return ClipOval(
-                      child: Image.memory(
-                        snapshot.data!,
-                        height: 200,
-                        width: 200,
-                        fit: BoxFit.cover,
-                      ),
+  BuildContext context,
+  String photoUrl,
+  String nom,
+  String instrument,
+  String birthday,
+  String email,
+) {
+  return ClipRRect(
+    borderRadius: BorderRadius.circular(20.0),
+    child: BackdropFilter(
+      filter: ImageFilter.blur(sigmaX: 30.0, sigmaY: 30.0),
+      child: Container(
+        width: MediaQuery.of(context).size.width * 0.8,
+        padding: const EdgeInsets.all(12.0),
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(20.0),
+          color: Colors.white.withOpacity(0.2),
+          border: Border.all(color: Colors.cyan, width: 0.8),
+        ),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            ClipOval(
+              child: Builder(
+                builder: (context) {
+                  if (photoUrl.endsWith('.svg')) {
+                    // Utilise SvgPicture si le fichier est un SVG
+                    return SvgPicture.asset(
+                      photoUrl,
+                      height: 200,
+                      width: 200,
+                      fit: BoxFit.cover,
+                      colorFilter:
+                        const ColorFilter.mode(Colors.cyan, BlendMode.srcIn),
                     );
                   } else {
-                    return ClipOval(
-                      child: SvgPicture.asset(
-                        'assets/images/anonymous.svg',
-                        height: 200,
-                        width: 200,
-                        fit: BoxFit.cover,
-                        colorFilter: const ColorFilter.mode(
-                            Colors.cyan, BlendMode.srcIn),
-                      ),
+                    // Utilise Image.asset pour les fichiers PNG/JPG
+                    return Image.asset(
+                      photoUrl,
+                      height: 200,
+                      width: 200,
+                      fit: BoxFit.cover,
+                      alignment: Alignment.topCenter,
+                      errorBuilder: (context, error, stackTrace) {
+                        // Affiche le SVG si l'image n'existe pas
+                        return SvgPicture.asset(
+                          'assets/images/anonymous.svg',
+                          height: 200,
+                          width: 200,
+                          fit: BoxFit.cover,
+                          colorFilter:
+                        const ColorFilter.mode(Colors.cyan, BlendMode.srcIn),
+                        );
+                      },
                     );
                   }
                 },
               ),
-              const SizedBox(height: 16),
-              Text(
-                nom,
-                style: const TextStyle(
-                  color: Colors.cyan,
-                  fontSize: 20,
-                  fontWeight: FontWeight.w500,
-                ),
+            ),
+            const SizedBox(height: 16),
+            Text(
+              nom,
+              style: const TextStyle(
+                color: Colors.cyan,
+                fontSize: 20,
+                fontWeight: FontWeight.w500,
               ),
-              Text(
-                instrument,
-                style: const TextStyle(
-                  color: Colors.white,
-                  fontSize: 18,
-                ),
+            ),
+            Text(
+              instrument,
+              style: const TextStyle(
+                color: Colors.white,
+                fontSize: 18,
               ),
-              const Divider(color: Colors.grey),
-              Text(
-                birthday.isEmpty
-                    ? "Date de naissance: Non communiquée"
-                    : "Date de naissance: $birthday",
-                style: TextStyle(
-                  color: Colors.white,
-                  fontSize: 16,
-                  fontStyle: birthday.isEmpty ? FontStyle.italic : FontStyle.normal,
-                ),
+            ),
+            const Divider(color: Colors.grey),
+            Text(
+              birthday.isEmpty
+                  ? "Date de naissance: Non communiquée"
+                  : "Date de naissance: $birthday",
+              style: TextStyle(
+                color: Colors.white,
+                fontSize: 16,
+                fontStyle:
+                    birthday.isEmpty ? FontStyle.italic : FontStyle.normal,
               ),
-              const Divider(color: Colors.grey),
-              Text(
-                email.isEmpty ? "email: Non communiqué" : "email: $email",
-                style: TextStyle(
-                  color: Colors.white,
-                  fontSize: 16,
-                  fontStyle: email.isEmpty ? FontStyle.italic : FontStyle.normal,
-                ),
+            ),
+            const Divider(color: Colors.grey),
+            Text(
+              email.isEmpty ? "email: Non communiqué" : "email: $email",
+              style: TextStyle(
+                color: Colors.white,
+                fontSize: 16,
+                fontStyle:
+                    email.isEmpty ? FontStyle.italic : FontStyle.normal,
               ),
-            ],
-          ),
+            ),
+          ],
         ),
       ),
-    );
-  }
+    ),
+  );
+}
 
   Widget _buildGlassmorphicButton(
       BuildContext context, IconData icon, String title) {

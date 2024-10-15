@@ -24,7 +24,7 @@ class _RehearsalPageState extends State<RehearsalPage> {
   }
 
   Future<void> readDataFromSheet() async {
-    dataFromSheet = (await gsheetCrudUserDetails!.values.map.allRows())!;
+    dataFromSheet = (await gsheetRehearsalsDetails!.values.map.allRows())!;
     if (dataFromSheet.isNotEmpty) {
       closestDate = getClosestFutureDate(dataFromSheet);
     } else {

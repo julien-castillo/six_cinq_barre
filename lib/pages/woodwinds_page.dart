@@ -5,6 +5,7 @@ import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter_svg/svg.dart';
 import 'dart:ui';
 import 'package:intl/intl.dart';
+import 'package:app_six_cinq_barre/gen/assets.gen.dart';
 
 class WoodwindsPage extends StatefulWidget {
   const WoodwindsPage({super.key});
@@ -19,7 +20,7 @@ class _WoodwindsPageState extends State<WoodwindsPage> {
   @override
   void initState() {
     super.initState();
-    readDataWoodwindsFromAdminSheet();
+    readDataStringsFromAdminSheet();
   }
 
   String formatDateFromSheet(String serialDate) {
@@ -33,13 +34,58 @@ class _WoodwindsPageState extends State<WoodwindsPage> {
     return DateFormat('dd/MM/yyyy').format(date);
   }
 
-  Future<void> readDataWoodwindsFromAdminSheet() async {
+  Future<void> readDataStringsFromAdminSheet() async {
     final List<Map<String, String>> allData =
-        (await gsheetAdminDetails!.values.map.allRows())!;
+        (await gsheetMusiciansDetails!.values.map.allRows())!;
     setState(() {
       woodwindsMusicians =
           allData.where((row) => row['pupitre'] == 'Bois').toList();
     });
+  }
+
+  String normalizeName(String name) {
+    const Map<String, String> accentsMap = {
+      'à': 'a', 'â': 'a', 'ä': 'a', 'á': 'a', 'ã': 'a',
+      'è': 'e', 'ê': 'e', 'ë': 'e', 'é': 'e',
+      'ì': 'i', 'î': 'i', 'ï': 'i',
+      'ò': 'o', 'ô': 'o', 'ö': 'o', 'ó': 'o', 'õ': 'o',
+      'ù': 'u', 'û': 'u', 'ü': 'u', 'ú': 'u',
+      'ç': 'c', 'ñ': 'n', 'ý': 'y', 'ÿ': 'y',
+      'À': 'a', 'Â': 'a', 'Ä': 'a', 'Á': 'a', 'Ã': 'a',
+      'È': 'e', 'Ê': 'e', 'Ë': 'e', 'É': 'e',
+      'Ì': 'i', 'Î': 'i', 'Ï': 'i',
+      'Ò': 'o', 'Ô': 'o', 'Ö': 'o', 'Ó': 'o', 'Õ': 'o',
+      'Ù': 'u', 'Û': 'u', 'Ü': 'u', 'Ú': 'u',
+      'Ç': 'c', 'Ñ': 'n', 'Ý': 'y', 'Ÿ': 'y',
+    };
+
+    accentsMap.forEach((accentedChar, replacement) {
+      name = name.replaceAll(accentedChar, replacement);
+    });
+
+    return name
+        .toLowerCase()
+        .replaceAll(' ', '_')
+        .replaceAll(RegExp(r'[^a-z0-9_]'), '');
+  }
+
+  final List<String> availableImages = 
+      Assets.images.musiciens.values.map((image) => image.path.split('/').last).toList();
+
+  String _getLocalImageUrl(String musicianName) {
+    final normalizedName = normalizeName(musicianName);
+    final List<String> extensions = ['.png', '.jpg'];
+
+    for (var ext in extensions) {
+      final fileName = '$normalizedName$ext';
+      print(availableImages);
+
+      if (availableImages.contains(fileName)) {
+        return 'assets/images/musiciens/$fileName';
+      }
+    }
+return "";
+    // return 'assets/images/anonymous.png';
   }
 
   @override
@@ -60,7 +106,7 @@ class _WoodwindsPageState extends State<WoodwindsPage> {
                   final musicien = woodwindsMusicians[index];
                   return _buildGlassmorphicCard(
                     context,
-                    _getDirectImageUrl(musicien["photo"]), // Convertir l'URL ici
+                    _getLocalImageUrl(musicien["musicien"]!),
                     musicien["musicien"]!,
                     musicien["instrument"]!,
                     formatDateFromSheet(musicien['birthday']!),
@@ -72,7 +118,7 @@ class _WoodwindsPageState extends State<WoodwindsPage> {
                   enlargeCenterPage: true,
                   autoPlay: false,
                   autoPlayInterval: const Duration(seconds: 3),
-                  aspectRatio: 2,
+                  aspectRatio: 2.0,
                   viewportFraction: 0.8,
                   enableInfiniteScroll: false,
                 ),
@@ -90,119 +136,111 @@ class _WoodwindsPageState extends State<WoodwindsPage> {
     );
   }
 
-  // Nouvelle fonction pour obtenir l'URL directe
-  String _getDirectImageUrl(String? photoUrl) {
-  if (photoUrl == null || photoUrl.isEmpty) {
-    return '';
-  }
-  
-  // Extraire l'identifiant du fichier à partir de l'URL
-  final RegExp regExp = RegExp(r'/d/([^/]+)');
-  final match = regExp.firstMatch(photoUrl);
-
-  if (match != null && match.groupCount > 0) {
-    String fileId = match.group(1)!; // Récupérer l'identifiant
-    return 'https://drive.google.com/uc?id=$fileId'; // Formater l'URL correcte
-  } else {
-    return ''; // Retourner une chaîne vide si l'identifiant n'est pas trouvé
-  }
-}
-
-
   Widget _buildGlassmorphicCard(
-    BuildContext context,
-    String? photoUrl, // Accepte photoUrl comme nullable
-    String nom,
-    String instrument,
-    String birthday,
-    String email,
-  ) {
-    return ClipRRect(
-      borderRadius: BorderRadius.circular(20.0),
-      child: BackdropFilter(
-        filter: ImageFilter.blur(sigmaX: 30.0, sigmaY: 30.0),
-        child: Container(
-          width: MediaQuery.of(context).size.width * 0.8,
-          padding: const EdgeInsets.all(12.0),
-          decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(20.0),
-            color: Colors.white.withOpacity(0.2),
-            border: Border.all(color: Colors.cyan, width: 0.8),
-          ),
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              // Vérifiez si photoUrl n'est pas vide et non nul
-              if (photoUrl != null && photoUrl.isNotEmpty)
-                ClipOval(
-                  child: Image.network(
-                    photoUrl, // Utilisez Image.network pour charger l'image depuis l'URL
-                    height: 200,
-                    width: 200,
-                    fit: BoxFit.cover,
-                    alignment: Alignment.topCenter,
-                  ),
-                )
-              else
-                ClipOval(
-                  child: SvgPicture.asset(
-                    'assets/images/anonymous.svg', // Remplacez par le chemin de votre SVG
-                    height: 200,
-                    width: 200,
-                    fit: BoxFit.cover,
-                    colorFilter:
+  BuildContext context,
+  String photoUrl,
+  String nom,
+  String instrument,
+  String birthday,
+  String email,
+) {
+  return ClipRRect(
+    borderRadius: BorderRadius.circular(20.0),
+    child: BackdropFilter(
+      filter: ImageFilter.blur(sigmaX: 30.0, sigmaY: 30.0),
+      child: Container(
+        width: MediaQuery.of(context).size.width * 0.8,
+        padding: const EdgeInsets.all(12.0),
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(20.0),
+          color: Colors.white.withOpacity(0.2),
+          border: Border.all(color: Colors.cyan, width: 0.8),
+        ),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            ClipOval(
+              child: Builder(
+                builder: (context) {
+                  if (photoUrl.endsWith('.svg')) {
+                    // Utilise SvgPicture si le fichier est un SVG
+                    return SvgPicture.asset(
+                      photoUrl,
+                      height: 200,
+                      width: 200,
+                      fit: BoxFit.cover,
+                      colorFilter:
                         const ColorFilter.mode(Colors.cyan, BlendMode.srcIn),
-                  ),
-                ),
-              const SizedBox(height: 16),
-              Text(
-                nom,
-                style: const TextStyle(
-                  color: Colors.cyan,
-                  fontSize: 20,
-                  fontWeight: FontWeight.w500,
-                ),
+                    );
+                  } else {
+                    // Utilise Image.asset pour les fichiers PNG/JPG
+                    return Image.asset(
+                      photoUrl,
+                      height: 200,
+                      width: 200,
+                      fit: BoxFit.cover,
+                      alignment: Alignment.topCenter,
+                      errorBuilder: (context, error, stackTrace) {
+                        // Affiche le SVG si l'image n'existe pas
+                        return SvgPicture.asset(
+                          'assets/images/anonymous.svg',
+                          height: 200,
+                          width: 200,
+                          fit: BoxFit.cover,
+                          colorFilter:
+                        const ColorFilter.mode(Colors.cyan, BlendMode.srcIn),
+                        );
+                      },
+                    );
+                  }
+                },
               ),
-              Text(
-                instrument,
-                style: const TextStyle(
-                  color: Colors.white,
-                  fontSize: 18,
-                ),
+            ),
+            const SizedBox(height: 16),
+            Text(
+              nom,
+              style: const TextStyle(
+                color: Colors.cyan,
+                fontSize: 20,
+                fontWeight: FontWeight.w500,
               ),
-              const Divider(color: Colors.grey),
-              Text(
-                birthday.isEmpty
-                    ? "Date de naissance: Non communiquée"
-                    : "Date de naissance: $birthday",
-                style: TextStyle(
-                  color: Colors.white,
-                  fontSize: 16,
-                  fontStyle: birthday.isEmpty
-                      ? FontStyle.italic
-                      : FontStyle
-                          .normal, // Changer le style en italique si birthday est vide
-                ),
+            ),
+            Text(
+              instrument,
+              style: const TextStyle(
+                color: Colors.white,
+                fontSize: 18,
               ),
-              const Divider(color: Colors.grey),
-              Text(
-                email.isEmpty ? "email: Non communiqué" : "email: $email",
-                style: TextStyle(
-                  color: Colors.white,
-                  fontSize: 16,
-                  fontStyle: email.isEmpty
-                      ? FontStyle.italic
-                      : FontStyle
-                          .normal, // Changer le style en italique si email est vide
-                ),
+            ),
+            const Divider(color: Colors.grey),
+            Text(
+              birthday.isEmpty
+                  ? "Date de naissance: Non communiquée"
+                  : "Date de naissance: $birthday",
+              style: TextStyle(
+                color: Colors.white,
+                fontSize: 16,
+                fontStyle:
+                    birthday.isEmpty ? FontStyle.italic : FontStyle.normal,
               ),
-            ],
-          ),
+            ),
+            const Divider(color: Colors.grey),
+            Text(
+              email.isEmpty ? "email: Non communiqué" : "email: $email",
+              style: TextStyle(
+                color: Colors.white,
+                fontSize: 16,
+                fontStyle:
+                    email.isEmpty ? FontStyle.italic : FontStyle.normal,
+              ),
+            ),
+          ],
         ),
       ),
-    );
-  }
+    ),
+  );
+}
 
   Widget _buildGlassmorphicButton(
       BuildContext context, IconData icon, String title) {
