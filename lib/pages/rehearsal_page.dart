@@ -1,9 +1,9 @@
 import 'dart:async';
 import 'dart:ui';
 import 'dart:math'; // Ajouté pour utiliser Random
+import 'package:app_six_cinq_barre/functions.dart';
 import 'package:app_six_cinq_barre/gsheet_setup.dart';
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
 
 class RehearsalPage extends StatefulWidget {
   const RehearsalPage({super.key});
@@ -33,49 +33,12 @@ class _RehearsalPageState extends State<RehearsalPage> {
     setState(() {});
   }
 
-  String formatDateFromSheet(String serialDate) {
-    if (serialDate.isEmpty || int.tryParse(serialDate) == null) {
-      return '';
-    }
-
-    final baseDate = DateTime(1899, 12, 30);
-    final serialNumber = int.parse(serialDate);
-    final date = baseDate.add(Duration(days: serialNumber));
-    return DateFormat('dd/MM/yyyy').format(date);
-  }
-
-  String getClosestFutureDate(List<dynamic> data) {
-    DateTime today = DateTime.now();
-    DateTime? closestDate;
-    int closestDifference = double.maxFinite.toInt();
-
-    for (var row in data) {
-      if (row['date'] == null ||
-          row['date'].isEmpty ||
-          int.tryParse(row['date']) == null) {
-        continue;
-      }
-
-      DateTime rowDate =
-          DateTime(1899, 12, 30).add(Duration(days: int.parse(row['date'])));
-      int difference = rowDate.difference(today).inDays;
-
-      if (difference > 0 && difference < closestDifference) {
-        closestDate = rowDate;
-        closestDifference = difference;
-      }
-    }
-
-    return closestDate != null
-        ? DateFormat('dd/MM/yyyy').format(closestDate)
-        : '';
-  }
-
   @override
   Widget build(BuildContext context) {
-    final saisonText = dataFromSheet.isNotEmpty
-        ? dataFromSheet[0]['saison']
-        : 'Mise à jour en cours...';
+    final saisonText =
+        dataFromSheet.isNotEmpty && dataFromSheet[0]['saison'] != null
+            ? dataFromSheet[0]['saison']
+            : 'Saison actuelle';
 
     return Scaffold(
       appBar: AppBar(
@@ -368,14 +331,14 @@ class _RehearsalPageState extends State<RehearsalPage> {
           ],
         ),
       ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () async {
-          await readDataFromSheet();
-          setState(() {});
-        },
-        backgroundColor: Colors.cyan,
-        child: const Icon(Icons.refresh),
-      ),
+      // floatingActionButton: FloatingActionButton(
+      //   onPressed: () async {
+      //     await readDataFromSheet();
+      //     setState(() {});
+      //   },
+      //   backgroundColor: Colors.cyan,
+      //   child: const Icon(Icons.refresh),
+      // ),
     );
   }
 }

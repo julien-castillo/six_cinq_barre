@@ -60,7 +60,7 @@ class _NavigationWrapperState extends State<NavigationWrapper> {
       ),
       bottomNavigationBar: CurvedNavigationBar(
         index: _currentIndex,
-        height: 60.0,
+        height: 75.0,
         items: <Widget>[
           _buildNavItem(Icons.home, 'Accueil', 0),
           _buildNavItem(Icons.sports_bar, 'Répétitions', 1),
@@ -82,10 +82,10 @@ class _NavigationWrapperState extends State<NavigationWrapper> {
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
         const SizedBox(height: 6),
-        Icon(icon, size: 30, color: isSelected ? Colors.black : Colors.white),
+        Icon(icon, size: 30, color: isSelected ? Colors.cyan : Colors.white),
         const SizedBox(height: 1),
         Text(label,
-            style: TextStyle(color: isSelected ? Colors.black : Colors.white)),
+            style: TextStyle(color: isSelected ? Colors.black : Colors.white, fontSize: 15)),
       ],
     );
   }

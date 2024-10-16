@@ -1,10 +1,11 @@
+import 'package:app_six_cinq_barre/functions.dart';
 import 'package:app_six_cinq_barre/gsheet_setup.dart';
 import 'package:app_six_cinq_barre/main.dart';
+import 'package:app_six_cinq_barre/pages/musicians_page.dart';
 import 'package:flutter/material.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter_svg/svg.dart';
 import 'dart:ui';
-import 'package:intl/intl.dart';
 import 'package:app_six_cinq_barre/gen/assets.gen.dart';
 
 class BrassPage extends StatefulWidget {
@@ -25,16 +26,16 @@ int _currentIndex = 0;
     readDataStringsFromAdminSheet();
   }
 
-  String formatDateFromSheet(String serialDate) {
-    if (serialDate.isEmpty || int.tryParse(serialDate) == null) {
-      return '';
-    }
+  // String formatDateFromSheet(String serialDate) {
+  //   if (serialDate.isEmpty || int.tryParse(serialDate) == null) {
+  //     return '';
+  //   }
 
-    final baseDate = DateTime(1899, 12, 30);
-    final serialNumber = int.parse(serialDate);
-    final date = baseDate.add(Duration(days: serialNumber));
-    return DateFormat('dd/MM/yyyy').format(date);
-  }
+  //   final baseDate = DateTime(1899, 12, 30);
+  //   final serialNumber = int.parse(serialDate);
+  //   final date = baseDate.add(Duration(days: serialNumber));
+  //   return DateFormat('dd/MM/yyyy').format(date);
+  // }
 
   Future<void> readDataStringsFromAdminSheet() async {
     final List<Map<String, String>> allData =
@@ -45,69 +46,69 @@ int _currentIndex = 0;
     });
   }
 
-  String normalizeName(String name) {
-    const Map<String, String> accentsMap = {
-      'à': 'a',
-      'â': 'a',
-      'ä': 'a',
-      'á': 'a',
-      'ã': 'a',
-      'è': 'e',
-      'ê': 'e',
-      'ë': 'e',
-      'é': 'e',
-      'ì': 'i',
-      'î': 'i',
-      'ï': 'i',
-      'ò': 'o',
-      'ô': 'o',
-      'ö': 'o',
-      'ó': 'o',
-      'õ': 'o',
-      'ù': 'u',
-      'û': 'u',
-      'ü': 'u',
-      'ú': 'u',
-      'ç': 'c',
-      'ñ': 'n',
-      'ý': 'y',
-      'ÿ': 'y',
-      'À': 'a',
-      'Â': 'a',
-      'Ä': 'a',
-      'Á': 'a',
-      'Ã': 'a',
-      'È': 'e',
-      'Ê': 'e',
-      'Ë': 'e',
-      'É': 'e',
-      'Ì': 'i',
-      'Î': 'i',
-      'Ï': 'i',
-      'Ò': 'o',
-      'Ô': 'o',
-      'Ö': 'o',
-      'Ó': 'o',
-      'Õ': 'o',
-      'Ù': 'u',
-      'Û': 'u',
-      'Ü': 'u',
-      'Ú': 'u',
-      'Ç': 'c',
-      'Ñ': 'n',
-      'Ý': 'y',
-      'Ÿ': 'y',
-    };
+  // String normalizeName(String name) {
+  //   const Map<String, String> accentsMap = {
+  //     'à': 'a',
+  //     'â': 'a',
+  //     'ä': 'a',
+  //     'á': 'a',
+  //     'ã': 'a',
+  //     'è': 'e',
+  //     'ê': 'e',
+  //     'ë': 'e',
+  //     'é': 'e',
+  //     'ì': 'i',
+  //     'î': 'i',
+  //     'ï': 'i',
+  //     'ò': 'o',
+  //     'ô': 'o',
+  //     'ö': 'o',
+  //     'ó': 'o',
+  //     'õ': 'o',
+  //     'ù': 'u',
+  //     'û': 'u',
+  //     'ü': 'u',
+  //     'ú': 'u',
+  //     'ç': 'c',
+  //     'ñ': 'n',
+  //     'ý': 'y',
+  //     'ÿ': 'y',
+  //     'À': 'a',
+  //     'Â': 'a',
+  //     'Ä': 'a',
+  //     'Á': 'a',
+  //     'Ã': 'a',
+  //     'È': 'e',
+  //     'Ê': 'e',
+  //     'Ë': 'e',
+  //     'É': 'e',
+  //     'Ì': 'i',
+  //     'Î': 'i',
+  //     'Ï': 'i',
+  //     'Ò': 'o',
+  //     'Ô': 'o',
+  //     'Ö': 'o',
+  //     'Ó': 'o',
+  //     'Õ': 'o',
+  //     'Ù': 'u',
+  //     'Û': 'u',
+  //     'Ü': 'u',
+  //     'Ú': 'u',
+  //     'Ç': 'c',
+  //     'Ñ': 'n',
+  //     'Ý': 'y',
+  //     'Ÿ': 'y',
+  //   };
 
-    accentsMap.forEach((accentedChar, replacement) {
-      name = name.replaceAll(accentedChar, replacement);
-    });
+  //   accentsMap.forEach((accentedChar, replacement) {
+  //     name = name.replaceAll(accentedChar, replacement);
+  //   });
 
-    return name
-        .toLowerCase()
-        .replaceAll(' ', '_')
-        .replaceAll(RegExp(r'[^a-z0-9_]'), '');
-  }
+  //   return name
+  //       .toLowerCase()
+  //       .replaceAll(' ', '_')
+  //       .replaceAll(RegExp(r'[^a-z0-9_]'), '');
+  // }
 
   final List<String> availableImages = Assets.images.musiciens.values
       .map((image) => image.path.split('/').last)
@@ -139,7 +140,7 @@ int _currentIndex = 0;
       ),
       backgroundColor: Colors.black,
       body: brassMusicians.isEmpty
-          ? const Center(child: CircularProgressIndicator())
+          ? const Center(child: CircularProgressIndicator(color: Colors.cyan))
           : Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
@@ -194,14 +195,30 @@ int _currentIndex = 0;
                 ),
               ],
             ),
-      floatingActionButton: GestureDetector(
-        onTap: () {
-          Navigator.pushReplacement(
-            context,
-            MaterialPageRoute(builder: (context) => const MyApp()),
-          );
-        },
-        child: _buildGlassmorphicButton(context, Icons.home, 'Accueil'),
+      floatingActionButton: Row(
+        mainAxisAlignment: MainAxisAlignment.end,
+        children: [
+          GestureDetector(
+            onTap: () {
+              Navigator.pushReplacement(
+                context,
+                MaterialPageRoute(builder: (context) => const MusiciansPage()),
+              );
+            },
+            child: _buildGlassmorphicButtonArrow(
+                context, Icons.arrow_back, 'Musiciens'),
+          ),
+          const SizedBox(width: 10), // Espace entre les deux boutons
+          GestureDetector(
+            onTap: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => const MyApp()),
+              );
+            },
+            child: _buildGlassmorphicButtonHome(context, Icons.home, 'Accueil'),
+          ),
+        ],
       ),
     );
   }
@@ -312,7 +329,7 @@ int _currentIndex = 0;
     );
   }
 
-  Widget _buildGlassmorphicButton(
+  Widget _buildGlassmorphicButtonArrow(
       BuildContext context, IconData icon, String title) {
     return Container(
       width: 60,
@@ -322,6 +339,33 @@ int _currentIndex = 0;
           topLeft: Radius.circular(20),
           topRight: Radius.circular(20),
           bottomLeft: Radius.circular(20),
+        ),
+        color: Colors.cyan.withOpacity(0.2),
+        border: Border.all(color: Colors.cyan.withOpacity(0.5), width: 1.5),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withOpacity(0.2),
+            blurRadius: 10.0,
+            spreadRadius: 2.0,
+          ),
+        ],
+      ),
+      child: Center(
+        child: Icon(icon, size: 30, color: Colors.cyan),
+      ),
+    );
+  }
+
+  Widget _buildGlassmorphicButtonHome(
+      BuildContext context, IconData icon, String title) {
+    return Container(
+      width: 60,
+      height: 60,
+      decoration: BoxDecoration(
+        borderRadius: const BorderRadius.only(
+          topLeft: Radius.circular(20),
+          topRight: Radius.circular(20),
+          bottomRight: Radius.circular(20),
         ),
         color: Colors.cyan.withOpacity(0.2),
         border: Border.all(color: Colors.cyan.withOpacity(0.5), width: 1.5),
