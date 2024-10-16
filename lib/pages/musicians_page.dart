@@ -1,6 +1,6 @@
 import 'package:app_six_cinq_barre/gsheet_setup.dart';
 import 'package:app_six_cinq_barre/pages/brass_page.dart';
-import 'package:app_six_cinq_barre/pages/percussion_page.dart';
+import 'package:app_six_cinq_barre/pages/percussions_page.dart';
 import 'package:app_six_cinq_barre/pages/strings_page.dart';
 import 'package:app_six_cinq_barre/pages/woodwinds_page.dart';
 import 'package:flutter/material.dart';
