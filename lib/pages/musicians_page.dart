@@ -1,3 +1,4 @@
+import 'package:app_six_cinq_barre/functions.dart';
 import 'package:app_six_cinq_barre/gsheet_setup.dart';
 import 'package:app_six_cinq_barre/pages/brass_page.dart';
 import 'package:app_six_cinq_barre/pages/percussions_page.dart';
@@ -37,18 +38,6 @@ class _MusiciansPageState extends State<MusiciansPage> {
     // Calculer le mois prochain
     DateTime nextMonth = DateTime(now.year, now.month + 1, 1);
     nextMonthName = DateFormat('MMMM').format(nextMonth);
-  }
-
-  ///
-  String formatDateFromSheet(String serialDate) {
-    if (serialDate.isEmpty || int.tryParse(serialDate) == null) {
-      return '';
-    }
-
-    final baseDate = DateTime(1899, 12, 30);
-    final serialNumber = int.parse(serialDate);
-    final date = baseDate.add(Duration(days: serialNumber));
-    return DateFormat('dd/MM/yyyy').format(date);
   }
 
   void readDataFromAdminSheet() async {
@@ -138,7 +127,8 @@ class _MusiciansPageState extends State<MusiciansPage> {
   // Fonction pour récupérer les données depuis Google Sheets
   Future<List<Map<String, dynamic>>> fetchGoogleSheetsData() async {
     // Récupérer les données depuis Google Sheets
-    var dataFromAdminSheet = (await gsheetMusiciansDetails!.values.map.allRows())!;
+    var dataFromAdminSheet =
+        (await gsheetMusiciansDetails!.values.map.allRows())!;
 
     // Transformer les données pour extraire les noms et les anniversaires
     List<Map<String, dynamic>> musiciansData = [];
@@ -169,6 +159,27 @@ class _MusiciansPageState extends State<MusiciansPage> {
           height: MediaQuery.of(context).size.height,
           child: Column(
             children: [
+              Padding(
+                padding: const EdgeInsets.only(top: 0),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.end,
+                  children: [
+                    const SizedBox(
+                        height:
+                            20),
+                    _buildBirthdaySection(
+                        'Anniversaires du mois', _currentMonthBirthdays),
+                    const SizedBox(
+                        height:
+                            20), // Espace réduit entre les deux sections d'anniversaires
+                    _buildBirthdaySection(
+                        'Anniversaires en $nextMonthName', _nextMonthBirthdays),
+                    const SizedBox(
+                        height:
+                            10), // Espace réduit entre les deux sections d'anniversaires
+                  ],
+                ),
+              ),
               Flexible(
                 child: GridView.count(
                   crossAxisCount: 2,
@@ -238,24 +249,6 @@ class _MusiciansPageState extends State<MusiciansPage> {
                       110.0,
                       Colors.cyan,
                     ),
-                  ],
-                ),
-              ),
-              Padding(
-                padding: const EdgeInsets.only(top: 0),
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.end,
-                  children: [
-                    _buildBirthdaySection(
-                        'Anniversaires du mois', _currentMonthBirthdays),
-                    const SizedBox(
-                        height:
-                            20), // Espace réduit entre les deux sections d'anniversaires
-                    _buildBirthdaySection(
-                        'Anniversaires en $nextMonthName', _nextMonthBirthdays),
-                    const SizedBox(
-                        height:
-                            10), // Espace réduit entre les deux sections d'anniversaires
                   ],
                 ),
               ),

@@ -40,11 +40,6 @@ class _ConcertPageState extends State<ConcertPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      // appBar: AppBar(
-      //   centerTitle: true,
-      //   backgroundColor: Colors.cyan,
-      //   title: const Text('Concerts'),
-      // ),
       backgroundColor: Colors.black,
       body: dataFromSheet.isEmpty
           ? const Center(child: CircularProgressIndicator(color: Colors.cyan))
@@ -58,11 +53,11 @@ class _ConcertPageState extends State<ConcertPage> {
                   child: _buildGlassmorphicRectangleConcert(
                     context,
                     Icons.calendar_month,
-                    row['programme'],
-                    row['date'],
-                    row['heure'],
-                    row['lieu'],
-                    row['informations_concert'],
+                    row['programme'] ?? "",
+                    row['date'] ?? "",
+                    row['heure'] ?? "",
+                    row['lieu'] ?? "",
+                    row['informations_concert'] ?? "",
                   ),
                 );
               },
