@@ -64,7 +64,7 @@ class _HomePageState extends State<HomePage> {
                   ],
                 ),
                 const Text(
-                  "Dirigé par Guillemette Daboval.",
+                  "Dirigé par Guillemette Daboval",
                   style: TextStyle(fontSize: 20, color: Colors.cyan),
                   textAlign: TextAlign.center,
                 ),

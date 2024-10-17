@@ -1,44 +1,81 @@
-import 'package:flutter/material.dart';
+import 'package:app_six_cinq_barre/gsheet_setup.dart';
 import 'package:app_six_cinq_barre/main.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
-class ContributionPage extends StatelessWidget {
+class ContributionPage extends StatefulWidget {
   const ContributionPage({super.key});
+
+  @override
+  _ContributionPageState createState() => _ContributionPageState();
+}
+
+class _ContributionPageState extends State<ContributionPage> {
+  List<Map<String, dynamic>>? dataFromSheet;
+  bool isLoading = true;
+
+  @override
+  void initState() {
+    super.initState();
+    loadData();
+  }
+
+  Future<void> loadData() async {
+    try {
+      dataFromSheet = await gsheetContributionDetails!.values.map.allRows();
+    } catch (e) {
+      print('Erreur lors du chargement des données : $e');
+    } finally {
+      setState(() {
+        isLoading = false;
+      });
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-          centerTitle: true,
-          backgroundColor: Colors.cyan,
-          title: const Text('Cotisations')),
-      backgroundColor: Colors.black,
-      body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            _buildGlassmorphicRectangle1(
-              context,
-              Icons.euro,
-              "Cotisation",
-              "Votre contribution est précieuse !",
-              "Merci d'utiliser le RIB ci-dessous pour régler votre cotisation.",
-            ),
-            const SizedBox(height: 80),
-            _buildGlassmorphicRectangle2(
-              context,
-              "Montant de la cotisation :",
-              "30 € (minimum !)",
-            ),
-            const SizedBox(height: 20),
-            _buildGlassmorphicCreditCard(
-              context,
-              "123 123", // Exemple de RIB
-              "BNPPBP", // Si $bic est utilisée
-            ),
-          ],
-        ),
+        centerTitle: true,
+        backgroundColor: Colors.cyan,
+        title: const Text('Cotisations'),
       ),
+      backgroundColor: Colors.black,
+      body: isLoading
+          ? const Center(
+              child: CircularProgressIndicator(
+              color: Colors.cyan,
+            ))
+          : dataFromSheet == null || dataFromSheet!.isEmpty
+              ? const Center(child: Text('Aucune donnée trouvée.'))
+              : Center(
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      _buildGlassmorphicRectangle1(
+                        context,
+                        Icons.euro,
+                        "Cotisation",
+                        dataFromSheet![0]['cotisation_subtitle'] ??
+                            "Sous-titre manquant",
+                        dataFromSheet![0]['cotisation_text'] ??
+                            "Texte manquant",
+                      ),
+                      const SizedBox(height: 80),
+                      _buildGlassmorphicRectangle2(
+                        context,
+                        "Montant de la cotisation :",
+                        dataFromSheet![0]['prix'] ?? "Prix manquant",
+                      ),
+                      const SizedBox(height: 20),
+                      _buildGlassmorphicCreditCard(
+                        context,
+                        dataFromSheet![0]['RIB'] ?? "RIB manquant",
+                        dataFromSheet![0]['BIC'] ?? "BIC manquant",
+                      ),
+                    ],
+                  ),
+                ),
       floatingActionButton: GestureDetector(
         onTap: () {
           Navigator.pushReplacement(
@@ -168,7 +205,6 @@ class ContributionPage extends StatelessWidget {
                     top: 0), // Remonter l'icône de la puce
                 child: SvgPicture.asset(
                   "assets/images/chip_icon.svg",
-                  // colorFilter: const ColorFilter.mode(Color(0xFF00BCD4), BlendMode.srcIn),
                   colorFilter: const ColorFilter.mode(
                       Color.fromARGB(255, 252, 236, 15), BlendMode.srcIn),
                   height:
@@ -187,25 +223,25 @@ class ContributionPage extends StatelessWidget {
             ],
           ),
           const SizedBox(height: 2),
-          const Text(
-            "FR76 3000 4000 1234 5678 9012 121", // RIB à mettre
-            style: TextStyle(
+          Text(
+            rib,
+            style: const TextStyle(
               fontSize: 18,
               color: Colors.white,
             ),
           ),
           const SizedBox(height: 15),
-          const Row(
+          Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               Text(
-                "Code BIC: BNPAFRPP",
-                style: TextStyle(
+                "Code BIC: $bic",
+                style: const TextStyle(
                   color: Colors.white,
                   fontSize: 18,
                 ),
               ),
-              Text(
+              const Text(
                 '6/5 barré', // Date d’expiration
                 style: TextStyle(color: Colors.cyan, fontSize: 18),
               ),
