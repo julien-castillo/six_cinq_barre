@@ -52,9 +52,28 @@ dev_dependencies:
     sdk: flutter
   flutter_gen_runner: any
   build_runner: any
+  flutter_launcher_icons: "^0.14.1"
 
 flutter_gen:
   output: lib/gen/
+
+flutter_launcher_icons:
+  android: "launcher_icon"
+  ios: true
+  image_path: "assets/images/icone-65barre.png"
+  min_sdk_android: 21 # android min sdk min:16, default 21
+  web:
+    generate: true
+    image_path: "assets/images/icone-65barre.png"
+    background_color: "#hexcode"
+    theme_color: "#hexcode"
+  windows:
+    generate: true
+    image_path: "assets/images/icone-65barre.png"
+    icon_size: 48 # min:48, max:256, default: 48
+  macos:
+    generate: true
+    image_path: "assets/images/icone-65barre.png"  
 
   # The "flutter_lints" package below contains a set of recommended lints to
   # encourage good coding practices. The lint set provided by the package is
