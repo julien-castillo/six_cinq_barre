@@ -66,6 +66,10 @@ class $AssetsImagesGen {
   /// File path: assets/images/horn.svg
   String get horn => 'assets/images/horn.svg';
 
+  /// File path: assets/images/icone-65barre.png
+  AssetGenImage get icone65barre =>
+      const AssetGenImage('assets/images/icone-65barre.png');
+
   /// File path: assets/images/image.jpg
   AssetGenImage get image => const AssetGenImage('assets/images/image.jpg');
 
@@ -122,6 +126,7 @@ class $AssetsImagesGen {
         damien,
         defendintelligence,
         horn,
+        icone65barre,
         image,
         lior,
         logo,
@@ -151,9 +156,13 @@ class $AssetsImagesMusiciensGen {
   AssetGenImage get loreneGuerrieri =>
       const AssetGenImage('assets/images/musiciens/lorene_guerrieri.png');
 
+  /// File path: assets/images/musiciens/sarah_tapan.jpg
+  AssetGenImage get sarahTapan =>
+      const AssetGenImage('assets/images/musiciens/sarah_tapan.jpg');
+
   /// List of all assets
   List<AssetGenImage> get values =>
-      [florentBoyer, julienCastillo, loreneGuerrieri];
+      [florentBoyer, julienCastillo, loreneGuerrieri, sarahTapan];
 }
 
 class Assets {
