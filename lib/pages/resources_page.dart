@@ -105,7 +105,7 @@ class _ResourcesPageState extends State<ResourcesPage> {
               MaterialPageRoute(builder: (context) => const MyApp()),
             );
           },
-          child: _buildGlassmorphicButton(context, Icons.home),
+          child: _buildGlassmorphicButton(context, Icons.home, 'Accueil'),
         ),
       ),
     );
@@ -296,12 +296,17 @@ class _ResourcesPageState extends State<ResourcesPage> {
     );
   }
 
-  Widget _buildGlassmorphicButton(BuildContext context, IconData icon) {
+  Widget _buildGlassmorphicButton(
+      BuildContext context, IconData icon, String title) {
     return Container(
-      width: 140,
-      padding: const EdgeInsets.all(16.0),
+      width: 60,
+      height: 60,
       decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(20),
+        borderRadius: const BorderRadius.only(
+          topLeft: Radius.circular(20),
+          topRight: Radius.circular(20),
+          bottomLeft: Radius.circular(20),
+        ),
         color: Colors.cyan.withOpacity(0.2),
         border: Border.all(color: Colors.cyan.withOpacity(0.5), width: 1.5),
         boxShadow: [
@@ -312,12 +317,8 @@ class _ResourcesPageState extends State<ResourcesPage> {
           ),
         ],
       ),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Icon(icon, color: Colors.cyan),
-          const SizedBox(width: 10),
-        ],
+      child: Center(
+        child: Icon(icon, size: 30, color: Colors.cyan),
       ),
     );
   }
