@@ -38,8 +38,6 @@ String formatDateFromSheet(String serialDate) {
         : '';
   }
 
-
-
   String normalizeName(String name) {
     const Map<String, String> accentsMap = {
       'à': 'a',

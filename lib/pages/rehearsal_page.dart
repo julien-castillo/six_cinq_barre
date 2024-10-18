@@ -331,14 +331,6 @@ class _RehearsalPageState extends State<RehearsalPage> {
           ],
         ),
       ),
-      // floatingActionButton: FloatingActionButton(
-      //   onPressed: () async {
-      //     await readDataFromSheet();
-      //     setState(() {});
-      //   },
-      //   backgroundColor: Colors.cyan,
-      //   child: const Icon(Icons.refresh),
-      // ),
     );
   }
 }

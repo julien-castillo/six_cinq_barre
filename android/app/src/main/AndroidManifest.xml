@@ -1,6 +1,6 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android">
     <application
-        android:label="app_six_cinq_barre"
+        android:label="6/5 barré"
         android:name="${applicationName}"
         android:icon="@mipmap/launcher_icon">
         <activity
