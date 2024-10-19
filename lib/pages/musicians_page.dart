@@ -154,7 +154,8 @@ class _MusiciansPageState extends State<MusiciansPage> {
         title: const Text('Musiciens'),
       ),
       backgroundColor: Colors.black,
-      body: SingleChildScrollView(
+      body: SafeArea(
+      child: SingleChildScrollView(
         child: Container(
           height: MediaQuery.of(context).size.height,
           child: Column(
@@ -180,14 +181,14 @@ class _MusiciansPageState extends State<MusiciansPage> {
                   ],
                 ),
               ),
-              Flexible(
+              Expanded(
                 child: GridView.count(
                   crossAxisCount: 2,
                   padding: const EdgeInsets.all(20.0),
                   mainAxisSpacing: 20.0,
                   crossAxisSpacing: 20.0,
                   shrinkWrap: true,
-                  physics: const NeverScrollableScrollPhysics(),
+                  physics: const ClampingScrollPhysics(),
                   children: [
                     _buildGlassmorphicCard(
                       context,
@@ -272,6 +273,7 @@ class _MusiciansPageState extends State<MusiciansPage> {
           ),
         ),
       ),
+    ),
     );
   }
 

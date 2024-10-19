@@ -15,7 +15,8 @@ class RehearsalPage extends StatefulWidget {
 class _RehearsalPageState extends State<RehearsalPage> {
   final inputText = TextEditingController();
   List dataFromSheet = [];
-  String? closestDate;
+  DateTime? closestDate;
+  int? closestIndex;
 
   @override
   void initState() {
@@ -24,26 +25,25 @@ class _RehearsalPageState extends State<RehearsalPage> {
   }
 
   Future<void> readDataFromSheet() async {
-    dataFromSheet = (await gsheetRehearsalsDetails!.values.map.allRows())!;
-    if (dataFromSheet.isNotEmpty) {
-      closestDate = getClosestFutureDate(dataFromSheet);
-    } else {
-      closestDate = null;
-    }
-    setState(() {});
+  dataFromSheet = (await gsheetRehearsalsDetails!.values.map.allRows())!;
+  if (dataFromSheet.isNotEmpty) {
+    var closestData = getClosestFutureDate(dataFromSheet);
+    closestDate = closestData?['date'];
+    closestIndex = closestData?['index']; // Indice de la répétition la plus proche
+  } else {
+    closestDate = null;
   }
+  setState(() {});
+}
 
   @override
   Widget build(BuildContext context) {
-    final saisonText =
-        dataFromSheet.isNotEmpty && dataFromSheet[0]['saison'] != null
-            ? dataFromSheet[0]['saison']
-            : 'Saison actuelle';
+    // final remainingText = formatDaysUntilNextRehearsal(closestDate);
 
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: Colors.cyan,
-        title: Text('$saisonText'),
+        backgroundColor: Colors.black,
+        title: formatDaysUntilNextRehearsal(closestDate),
         centerTitle: true,
       ),
       body: Container(
@@ -105,8 +105,7 @@ class _RehearsalPageState extends State<RehearsalPage> {
                             final programme = row['programme'];
                             final formation = row['formation'];
 
-                            final isClosestFutureDate =
-                                closestDate != null && date == closestDate;
+                            final isClosestFutureDate = closestIndex != -1 && index == closestIndex;
 
                             return GestureDetector(
                               onTap: () {
@@ -172,7 +171,8 @@ class _RehearsalPageState extends State<RehearsalPage> {
                                                       style: const TextStyle(
                                                         fontSize: 18,
                                                         color: Colors.white,
-                                                      )),
+                                                      ),
+                                                      textAlign: TextAlign.center,),
                                                   const Divider(
                                                       color: Colors.grey),
                                                   const Text('Programme : ',
