@@ -418,7 +418,7 @@ class _MusiciansPageState extends State<MusiciansPage> {
                 }).toList(),
               )
             : const Text(
-                "Aucun anniversaire à souhaiter !",
+                "Aucun anniversaire à souhaiter 😢",
                 style: TextStyle(
                     color: Colors.white,
                     fontSize: 18,

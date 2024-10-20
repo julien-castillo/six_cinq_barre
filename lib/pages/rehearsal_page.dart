@@ -161,6 +161,14 @@ class _RehearsalPageState extends State<RehearsalPage> {
                                                     ),
                                                   ),
                                                   const SizedBox(height: 16),
+                                                  Text('Répétition du $date : ',
+                                                      style: const TextStyle(
+                                                          color: Colors.orange,
+                                                          fontSize: 20,
+                                                          fontWeight:
+                                                              FontWeight.w500)),
+                                                              const Divider(
+                                                      color: Colors.grey),
                                                   Text('$lieu : ',
                                                       style: const TextStyle(
                                                           color: Colors.cyan,
@@ -224,7 +232,7 @@ class _RehearsalPageState extends State<RehearsalPage> {
                               },
                               child: Card(
                                 color: isClosestFutureDate
-                                    ? Colors.cyan.withOpacity(0.9)
+                                    ? Colors.orange.withOpacity(0.8)
                                     : Colors.black.withOpacity(0.1),
                                 margin: const EdgeInsets.symmetric(
                                     vertical: 8, horizontal: 16),
@@ -282,7 +290,7 @@ class _RehearsalPageState extends State<RehearsalPage> {
                                               ),
                                             ),
                                             Text(
-                                              'Lieu: $lieu',
+                                              '$lieu',
                                               style: const TextStyle(
                                                   fontSize: 18,
                                                   color: Colors.white),
@@ -301,7 +309,7 @@ class _RehearsalPageState extends State<RehearsalPage> {
                                                     text: '$formation',
                                                     style: const TextStyle(
                                                       fontSize: 16,
-                                                      color: Colors.white,
+                                                      color: Colors.yellow,
                                                       fontWeight:
                                                           FontWeight.bold,
                                                     ),
@@ -311,12 +319,12 @@ class _RehearsalPageState extends State<RehearsalPage> {
                                             ),
                                           ],
                                         ),
-                                        subtitle: const Text(
-                                          'Autre info si besoin',
-                                          style: TextStyle(
-                                              fontSize: 16,
-                                              color: Colors.white),
-                                        ),
+                                        // subtitle: const Text(
+                                        //   'Autre info si besoin',
+                                        //   style: TextStyle(
+                                        //       fontSize: 16,
+                                        //       color: Colors.white),
+                                        // ),
                                       ),
                                     ),
                                   ),
