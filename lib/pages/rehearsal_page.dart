@@ -193,7 +193,9 @@ class _RehearsalPageState extends State<RehearsalPage> {
                                                       style: const TextStyle(
                                                         fontSize: 18,
                                                         color: Colors.white,
-                                                      )),
+                                                      ),
+                                                      textAlign: TextAlign.center,
+                                                      ),
                                                   const Divider(
                                                       color: Colors.grey),
                                                   const Text('Formation : ',

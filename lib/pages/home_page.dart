@@ -232,7 +232,7 @@ class _HomePageState extends State<HomePage> {
           const SizedBox(height: 10),
           Text(
             subtitle,
-            style: const TextStyle(fontSize: 18, color: Colors.white),
+            style: const TextStyle(fontSize: 18, color: Colors.orange),
             textAlign: TextAlign.center,
           ),
         ],
