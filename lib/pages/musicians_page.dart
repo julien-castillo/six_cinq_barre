@@ -402,7 +402,7 @@ class _MusiciansPageState extends State<MusiciansPage> {
                   
                   // Afficher "aujourd'hui" ou la date formatée
                   String displayDate = isToday
-                      ? 'aujourd\'hui ! 🥳'
+                      ? 'aujourd\'hui !'
                       : _formatBirthdayDate(birthday['birthday']);
                   
                   return Container(
@@ -418,7 +418,7 @@ class _MusiciansPageState extends State<MusiciansPage> {
                 }).toList(),
               )
             : const Text(
-                "Aucun anniversaire à souhaiter 😢",
+                "Aucun anniversaire à souhaiter",
                 style: TextStyle(
                     color: Colors.white,
                     fontSize: 18,

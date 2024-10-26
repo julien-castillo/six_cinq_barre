@@ -66,6 +66,26 @@ class $AssetsImagesGen {
   /// File path: assets/images/horn.svg
   String get horn => 'assets/images/horn.svg';
 
+  /// File path: assets/images/icone-65barre-1.png
+  AssetGenImage get icone65barre1 =>
+      const AssetGenImage('assets/images/icone-65barre-1.png');
+
+  /// File path: assets/images/icone-65barre-2.png
+  AssetGenImage get icone65barre2 =>
+      const AssetGenImage('assets/images/icone-65barre-2.png');
+
+  /// File path: assets/images/icone-65barre-3.png
+  AssetGenImage get icone65barre3 =>
+      const AssetGenImage('assets/images/icone-65barre-3.png');
+
+  /// File path: assets/images/icone-65barre-4.png
+  AssetGenImage get icone65barre4 =>
+      const AssetGenImage('assets/images/icone-65barre-4.png');
+
+  /// File path: assets/images/icone-65barre-5.png
+  AssetGenImage get icone65barre5 =>
+      const AssetGenImage('assets/images/icone-65barre-5.png');
+
   /// File path: assets/images/icone-65barre.png
   AssetGenImage get icone65barre =>
       const AssetGenImage('assets/images/icone-65barre.png');
@@ -126,6 +146,11 @@ class $AssetsImagesGen {
         damien,
         defendintelligence,
         horn,
+        icone65barre1,
+        icone65barre2,
+        icone65barre3,
+        icone65barre4,
+        icone65barre5,
         icone65barre,
         image,
         lior,
@@ -144,25 +169,34 @@ class $AssetsImagesGen {
 class $AssetsImagesMusiciensGen {
   const $AssetsImagesMusiciensGen();
 
+  /// File path: assets/images/musiciens/catherine_rochard.jpg
+  AssetGenImage get catherineRochard =>
+      const AssetGenImage('assets/images/musiciens/catherine_rochard.jpg');
+
   /// File path: assets/images/musiciens/florent_boyer.jpg
   AssetGenImage get florentBoyer =>
       const AssetGenImage('assets/images/musiciens/florent_boyer.jpg');
 
+  /// File path: assets/images/musiciens/jessica_hackett.jpg
+  AssetGenImage get jessicaHackett =>
+      const AssetGenImage('assets/images/musiciens/jessica_hackett.jpg');
+
   /// File path: assets/images/musiciens/julien_castillo.png
   AssetGenImage get julienCastillo =>
       const AssetGenImage('assets/images/musiciens/julien_castillo.png');
-
-  /// File path: assets/images/musiciens/lorene_guerrieri.png
-  AssetGenImage get loreneGuerrieri =>
-      const AssetGenImage('assets/images/musiciens/lorene_guerrieri.png');
 
   /// File path: assets/images/musiciens/sarah_tapan.jpg
   AssetGenImage get sarahTapan =>
       const AssetGenImage('assets/images/musiciens/sarah_tapan.jpg');
 
   /// List of all assets
-  List<AssetGenImage> get values =>
-      [florentBoyer, julienCastillo, loreneGuerrieri, sarahTapan];
+  List<AssetGenImage> get values => [
+        catherineRochard,
+        florentBoyer,
+        jessicaHackett,
+        julienCastillo,
+        sarahTapan
+      ];
 }
 
 class Assets {
