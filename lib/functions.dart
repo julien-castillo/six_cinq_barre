@@ -12,6 +12,19 @@ String formatDateFromSheet(String serialDate) {
   return DateFormat('dd/MM/yyyy').format(date);
 }
 
+String formatDateFromSheetWhithoutYear(String serialDate) {
+  if (serialDate.isEmpty || int.tryParse(serialDate) == null) {
+    return '';
+  }
+
+  final baseDate = DateTime(1899, 12, 30);
+  final serialNumber = int.parse(serialDate);
+  final date = baseDate.add(Duration(days: serialNumber));
+
+  // Utilisation de la bibliothèque intl pour formater la date en "jour mois"
+  return DateFormat('d MMMM', 'fr_FR').format(date);
+}
+
 Map<String, dynamic>? getClosestFutureDate(List<dynamic> data) {
   DateTime today = DateTime.now();
   DateTime? closestDate;
@@ -59,11 +72,13 @@ RichText formatDaysUntilNextRehearsal(DateTime? closestDate) {
     return RichText(
       text: TextSpan(
         text: "Prochaine répétition : ",
-        style: TextStyle(color: Colors.white, fontSize: 20), // Couleur par défaut
+        style:
+            TextStyle(color: Colors.white, fontSize: 20), // Couleur par défaut
         children: [
           TextSpan(
             text: "aujourd'hui !",
-            style: TextStyle(color: Colors.orange, fontSize: 20), // Couleur orange
+            style:
+                TextStyle(color: Colors.orange, fontSize: 20), // Couleur orange
           ),
         ],
       ),
@@ -74,11 +89,13 @@ RichText formatDaysUntilNextRehearsal(DateTime? closestDate) {
     return RichText(
       text: TextSpan(
         text: "Prochaine répétition: ",
-        style: TextStyle(color: Colors.white, fontSize: 20), // Couleur par défaut
+        style:
+            TextStyle(color: Colors.white, fontSize: 20), // Couleur par défaut
         children: [
           TextSpan(
             text: "demain !",
-            style: TextStyle(color: Colors.orange, fontSize: 20), // Couleur orange
+            style:
+                TextStyle(color: Colors.orange, fontSize: 20), // Couleur orange
           ),
         ],
       ),
@@ -88,18 +105,19 @@ RichText formatDaysUntilNextRehearsal(DateTime? closestDate) {
     return RichText(
       text: TextSpan(
         text: "Prochaine répétition dans:  ",
-        style: TextStyle(color: Colors.white, fontSize: 20), // Couleur par défaut
+        style:
+            TextStyle(color: Colors.white, fontSize: 20), // Couleur par défaut
         children: [
           TextSpan(
             text: "$difference jours",
-            style: TextStyle(color: Colors.orange, fontSize: 20), // Couleur orange
+            style:
+                TextStyle(color: Colors.orange, fontSize: 20), // Couleur orange
           ),
         ],
       ),
     );
   }
 }
-
 
 String normalizeName(String name) {
   const Map<String, String> accentsMap = {
