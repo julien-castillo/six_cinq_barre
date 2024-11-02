@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:app_six_cinq_barre/pages/navigation_wrapper.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:app_six_cinq_barre/gsheet_setup.dart'; // Assurez-vous d'importer ce fichier
+import 'package:app_six_cinq_barre/gsheet_setup.dart';
+import 'package:shared_preferences/shared_preferences.dart'; // Assurez-vous d'importer ce fichier
 
 class LoginPage extends StatefulWidget {
   const LoginPage({Key? key}) : super(key: key);
@@ -91,80 +92,77 @@ class _LoginPageState extends State<LoginPage> {
   }
 
   Future<void> _verifyAndNavigate(BuildContext context) async {
-    final email = _emailController.text.trim();
-    if (email.isEmpty) {
-      setState(() {
-        _errorMessage = 'Veuillez entrer un email';
-      });
-      return;
-    }
-
-    final isValid = await verifyEmail(email);
-    if (isValid) {
-      Navigator.pushAndRemoveUntil(
-        context,
-        MaterialPageRoute(
-            builder: (context) => const NavigationWrapper(initialIndex: 0)),
-        (Route<dynamic> route) => false,
-      );
-    } else {
-      setState(() {
-        _errorMessage =
-            'Email non reconnu, contactez Fabienne, Coralie ou Sarah';
-      });
-    }
+  final email = _emailController.text.trim();
+  if (email.isEmpty) {
+    setState(() {
+      _errorMessage = 'Veuillez entrer un email';
+    });
+    return;
   }
 
-  Widget _buildHeader() {
-    return Column(
-      children: [
-        Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            const Text(
-              "Orchestre",
-              style: TextStyle(
-                fontSize: 30,
-                fontFamily: 'Poppins',
-                color: Colors.cyan,
-              ),
-            ),
-            const SizedBox(width: 10),
-            SvgPicture.asset(
-              "assets/images/65barre.svg",
-              colorFilter: const ColorFilter.mode(Colors.cyan, BlendMode.srcIn),
-              height: 75,
-            ),
-          ],
-        ),
-        const SizedBox(height: 20),
-        const Text(
-          "Dirigé par Guillemette Daboval",
-          style: TextStyle(fontSize: 20, color: Colors.cyan),
-          textAlign: TextAlign.center,
-        ),
-      ],
-    );
-  }
+  final result = await verifyEmail(email);
+  if (result['isValid'] == 'true') {
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setString('musicianName', result['musicianName'] ?? 'Musicien');
+    final musicianName = prefs.getString('musicianName') ?? 'Musicien';
 
-  Widget _buildLoginIcon() {
-    return Container(
-      decoration: BoxDecoration(
-        border: Border.all(color: Colors.cyan, width: 2),
-        shape: BoxShape.circle,
+    Navigator.pushAndRemoveUntil(
+      context,
+      MaterialPageRoute(
+        builder: (context) => NavigationWrapper(
+          initialIndex: 0,
+          musicianName: musicianName,
+        ),
       ),
-      padding: const EdgeInsets.all(20),
-      child: const Icon(Icons.lock_outline, color: Colors.cyan, size: 80),
+      (Route<dynamic> route) => false,
     );
+  } else {
+    setState(() {
+      _errorMessage = 'Email non reconnu, contactez Fabienne, Coralie ou Sarah';
+    });
   }
+}
+}
 
-  // void _navigateToHomePage(BuildContext context) {
-  //   Navigator.pushAndRemoveUntil(
-  //     context,
-  //     MaterialPageRoute(
-  //       builder: (context) => const NavigationWrapper(initialIndex: 0),
-  //     ),
-  //     (Route<dynamic> route) => false,
-  //   );
-  // }
+Widget _buildHeader() {
+  return Column(
+    children: [
+      Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          const Text(
+            "Orchestre",
+            style: TextStyle(
+              fontSize: 30,
+              fontFamily: 'Poppins',
+              color: Colors.cyan,
+            ),
+          ),
+          const SizedBox(width: 10),
+          SvgPicture.asset(
+            "assets/images/65barre.svg",
+            colorFilter: const ColorFilter.mode(Colors.cyan, BlendMode.srcIn),
+            height: 75,
+          ),
+        ],
+      ),
+      const SizedBox(height: 20),
+      const Text(
+        "Dirigé par Guillemette Daboval",
+        style: TextStyle(fontSize: 20, color: Colors.cyan),
+        textAlign: TextAlign.center,
+      ),
+    ],
+  );
+}
+
+Widget _buildLoginIcon() {
+  return Container(
+    decoration: BoxDecoration(
+      border: Border.all(color: Colors.cyan, width: 2),
+      shape: BoxShape.circle,
+    ),
+    padding: const EdgeInsets.all(20),
+    child: const Icon(Icons.lock_outline, color: Colors.cyan, size: 80),
+  );
 }

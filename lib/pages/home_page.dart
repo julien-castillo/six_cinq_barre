@@ -7,7 +7,8 @@ import 'package:app_six_cinq_barre/pages/resources_page.dart';
 import 'package:app_six_cinq_barre/gsheet_setup.dart';
 
 class HomePage extends StatefulWidget {
-  const HomePage({Key? key}) : super(key: key);
+  final String musicianName;
+  const HomePage({Key? key, required this.musicianName}) : super(key: key);
 
   @override
   _HomePageState createState() => _HomePageState();
@@ -17,6 +18,23 @@ class _HomePageState extends State<HomePage> {
   Future<List> _loadData() async {
     return await gsheetInformationsDetails!.values.map.allRows() ?? [];
   }
+
+  List dataFromSheet = [];
+  // String musicianName = 'Musicien';
+
+  @override
+  void initState() {
+    super.initState();
+    // readDataInformationsFromSheet();
+    // _loadMusicianName();
+  }
+
+  // Future<void> _loadMusicianName() async {
+  //   final prefs = await SharedPreferences.getInstance();
+  //   setState(() {
+  //     musicianName = prefs.getString('musicianName') ?? 'Musicien';
+  //   });
+  // }
 
   @override
   Widget build(BuildContext context) {
@@ -46,9 +64,14 @@ class _HomePageState extends State<HomePage> {
         child: SingleChildScrollView(
           child: Column(
             children: [
-              const SizedBox(height: 10),
+              Text(
+                "Bienvenue ${widget.musicianName}",
+                style: const TextStyle(fontSize: 18, color: Colors.orange),
+                textAlign: TextAlign.center,
+              ),
+              // const SizedBox(height: 10),
               _buildHeader(),
-              const SizedBox(height: 20),
+              const SizedBox(height: 10),
               _buildGlassmorphicRectangleInformations(
                 context,
                 "Informations :",
@@ -85,7 +108,7 @@ class _HomePageState extends State<HomePage> {
             ),
           ],
         ),
-        const Text(
+        Text(
           "Dirigé par Guillemette Daboval",
           style: TextStyle(fontSize: 20, color: Colors.cyan),
           textAlign: TextAlign.center,

@@ -7,6 +7,7 @@ import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter_svg/svg.dart';
 import 'dart:ui';
 import 'package:app_six_cinq_barre/gen/assets.gen.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class StringsPage extends StatefulWidget {
   const StringsPage({super.key});
@@ -136,12 +137,21 @@ class _StringsPageState extends State<StringsPage> {
           ),
           const SizedBox(width: 10), // Espace entre les deux boutons
           GestureDetector(
-            onTap: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(builder: (context) => const NavigationWrapper(initialIndex: 0)),
-              );
-            },
+            onTap: () async {
+  final prefs = await SharedPreferences.getInstance();
+  final musicianName = prefs.getString('musicianName') ?? 'Musicien';
+  
+  Navigator.pushAndRemoveUntil(
+    context,
+    MaterialPageRoute(
+      builder: (context) => NavigationWrapper(
+        initialIndex: 0,
+        musicianName: musicianName,
+      ),
+    ),
+    (Route<dynamic> route) => false,
+  );
+},
             child: _buildGlassmorphicButtonHome(context, Icons.home, 'Accueil'),
           ),
         ],

@@ -6,8 +6,13 @@ import 'package:app_six_cinq_barre/pages/concert_page.dart';
 
 class NavigationWrapper extends StatefulWidget {
   final int initialIndex;
+  final String musicianName;
 
-  const NavigationWrapper({super.key, required this.initialIndex});
+  const NavigationWrapper({
+    Key? key,
+    required this.initialIndex,
+    required this.musicianName,
+  }) : super(key: key);
 
   @override
   _NavigationWrapperState createState() => _NavigationWrapperState();
@@ -34,8 +39,8 @@ class _NavigationWrapperState extends State<NavigationWrapper> {
       appBar: AppBar(
         centerTitle: true,
         backgroundColor: Colors.cyan,
-        title: const [
-          Text("Accueil"),
+        title:  [
+          Text("Accueil - ${widget.musicianName}"),
           Text("Liste des Répétitions"),
           Text("Concerts"),
         ][_currentIndex],
@@ -48,7 +53,7 @@ class _NavigationWrapperState extends State<NavigationWrapper> {
           ),
           Expanded(
             child: [
-              const HomePage(),
+              HomePage(musicianName: widget.musicianName),
               const RehearsalPage(),
               const ConcertPage(),
             ][_currentIndex],

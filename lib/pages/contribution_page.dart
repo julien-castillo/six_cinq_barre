@@ -2,6 +2,7 @@ import 'package:app_six_cinq_barre/gsheet_setup.dart';
 import 'package:app_six_cinq_barre/pages/navigation_wrapper.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class ContributionPage extends StatefulWidget {
   const ContributionPage({super.key});
@@ -77,12 +78,21 @@ class _ContributionPageState extends State<ContributionPage> {
                   ),
                 ),
       floatingActionButton: GestureDetector(
-        onTap: () {
-          Navigator.pushReplacement(
-            context,
-            MaterialPageRoute(builder: (context) => const NavigationWrapper(initialIndex: 0)),
-          );
-        },
+        onTap: () async {
+  final prefs = await SharedPreferences.getInstance();
+  final musicianName = prefs.getString('musicianName') ?? 'Musicien';
+  
+  Navigator.pushAndRemoveUntil(
+    context,
+    MaterialPageRoute(
+      builder: (context) => NavigationWrapper(
+        initialIndex: 0,
+        musicianName: musicianName,
+      ),
+    ),
+    (Route<dynamic> route) => false,
+  );
+},
         child: _buildGlassmorphicButton(context, Icons.home, 'Accueil'),
       ),
     );

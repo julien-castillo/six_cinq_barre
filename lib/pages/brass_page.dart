@@ -7,6 +7,7 @@ import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter_svg/svg.dart';
 import 'dart:ui';
 import 'package:app_six_cinq_barre/gen/assets.gen.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class BrassPage extends StatefulWidget {
   const BrassPage({super.key});
@@ -135,14 +136,23 @@ int _currentIndex = 0;
           ),
           const SizedBox(width: 10), // Espace entre les deux boutons
           GestureDetector(
-            onTap: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(builder: (context) => const NavigationWrapper(initialIndex: 0)),
-              );
-            },
-            child: _buildGlassmorphicButtonHome(context, Icons.home, 'Accueil'),
-          ),
+  onTap: () async {
+  final prefs = await SharedPreferences.getInstance();
+  final musicianName = prefs.getString('musicianName') ?? 'Musicien';
+  
+  Navigator.pushAndRemoveUntil(
+    context,
+    MaterialPageRoute(
+      builder: (context) => NavigationWrapper(
+        initialIndex: 0,
+        musicianName: musicianName,
+      ),
+    ),
+    (Route<dynamic> route) => false,
+  );
+},
+  child: _buildGlassmorphicButtonHome(context, Icons.home, 'Accueil'),
+),
         ],
       ),
     );
