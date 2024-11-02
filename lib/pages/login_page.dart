@@ -1,8 +1,9 @@
-import 'package:app_six_cinq_barre/pages/navigation_wrapper.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/svg.dart';
+import 'package:app_six_cinq_barre/pages/navigation_wrapper.dart';
+import 'package:flutter_svg/flutter_svg.dart';
+import 'package:app_six_cinq_barre/gsheet_setup.dart'; // Assurez-vous d'importer ce fichier
 
-class LoginPage extends StatefulWidget  {
+class LoginPage extends StatefulWidget {
   const LoginPage({Key? key}) : super(key: key);
 
   @override
@@ -10,6 +11,8 @@ class LoginPage extends StatefulWidget  {
 }
 
 class _LoginPageState extends State<LoginPage> {
+  final TextEditingController _emailController = TextEditingController();
+  String _errorMessage = '';
 
   @override
   Widget build(BuildContext context) {
@@ -30,6 +33,15 @@ class _LoginPageState extends State<LoginPage> {
                   _buildEmailField(),
                   const SizedBox(height: 20),
                   _buildLoginButton(context),
+                  if (_errorMessage.isNotEmpty)
+                    Padding(
+                      padding: const EdgeInsets.only(top: 20),
+                      child: Text(
+                        _errorMessage,
+                        style: const TextStyle(color: Colors.red),
+                        textAlign: TextAlign.center,
+                      ),
+                    ),
                 ],
               ),
             ),
@@ -37,6 +49,70 @@ class _LoginPageState extends State<LoginPage> {
         ),
       ),
     );
+  }
+
+  Widget _buildEmailField() {
+    return TextField(
+      controller: _emailController,
+      style: const TextStyle(color: Colors.white),
+      decoration: InputDecoration(
+        labelText: "Email",
+        labelStyle: const TextStyle(color: Colors.cyan),
+        enabledBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(18),
+          borderSide: const BorderSide(color: Colors.cyan),
+        ),
+        focusedBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(18),
+          borderSide: const BorderSide(color: Colors.cyan),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildLoginButton(BuildContext context) {
+    return ElevatedButton(
+      onPressed: () => _verifyAndNavigate(context),
+      child: const SizedBox(
+        width: double.infinity,
+        child: Text(
+          "Connexion",
+          textAlign: TextAlign.center,
+          style: TextStyle(fontSize: 20),
+        ),
+      ),
+      style: ElevatedButton.styleFrom(
+        foregroundColor: Colors.black,
+        backgroundColor: Colors.cyan,
+        shape: const StadiumBorder(),
+        padding: const EdgeInsets.symmetric(vertical: 16),
+      ),
+    );
+  }
+
+  Future<void> _verifyAndNavigate(BuildContext context) async {
+    final email = _emailController.text.trim();
+    if (email.isEmpty) {
+      setState(() {
+        _errorMessage = 'Veuillez entrer un email';
+      });
+      return;
+    }
+
+    final isValid = await verifyEmail(email);
+    if (isValid) {
+      Navigator.pushAndRemoveUntil(
+        context,
+        MaterialPageRoute(
+            builder: (context) => const NavigationWrapper(initialIndex: 0)),
+        (Route<dynamic> route) => false,
+      );
+    } else {
+      setState(() {
+        _errorMessage =
+            'Email non reconnu, contactez Fabienne, Coralie ou Sarah';
+      });
+    }
   }
 
   Widget _buildHeader() {
@@ -82,51 +158,13 @@ class _LoginPageState extends State<LoginPage> {
     );
   }
 
-  Widget _buildEmailField() {
-    return TextField(
-      style: const TextStyle(color: Colors.white),
-      decoration: InputDecoration(
-        labelText: "Email",
-        labelStyle: const TextStyle(color: Colors.cyan),
-        enabledBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(18),
-          borderSide: const BorderSide(color: Colors.cyan),
-        ),
-        focusedBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(18),
-          borderSide: const BorderSide(color: Colors.cyan),
-        ),
-      ),
-    );
-  }
-
-  Widget _buildLoginButton(BuildContext context) {
-    return ElevatedButton(
-      onPressed: () => _navigateToHomePage(context),
-      child: const SizedBox(
-        width: double.infinity,
-        child: Text(
-          "Connexion",
-          textAlign: TextAlign.center,
-          style: TextStyle(fontSize: 20),
-        ),
-      ),
-      style: ElevatedButton.styleFrom(
-        foregroundColor: Colors.black,
-        backgroundColor: Colors.cyan,
-        shape: const StadiumBorder(),
-        padding: const EdgeInsets.symmetric(vertical: 16),
-      ),
-    );
-  }
-
-  void _navigateToHomePage(BuildContext context) {
-  Navigator.pushAndRemoveUntil(
-    context,
-    MaterialPageRoute(
-      builder: (context) => const NavigationWrapper(initialIndex: 0),
-    ),
-    (Route<dynamic> route) => false,
-  );
-}
+  // void _navigateToHomePage(BuildContext context) {
+  //   Navigator.pushAndRemoveUntil(
+  //     context,
+  //     MaterialPageRoute(
+  //       builder: (context) => const NavigationWrapper(initialIndex: 0),
+  //     ),
+  //     (Route<dynamic> route) => false,
+  //   );
+  // }
 }
