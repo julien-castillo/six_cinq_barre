@@ -1,7 +1,7 @@
 import 'package:app_six_cinq_barre/functions.dart';
 import 'package:app_six_cinq_barre/gsheet_setup.dart';
-import 'package:app_six_cinq_barre/main.dart';
 import 'package:app_six_cinq_barre/pages/musicians_page.dart';
+import 'package:app_six_cinq_barre/pages/navigation_wrapper.dart';
 import 'package:flutter/material.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter_svg/svg.dart';
@@ -138,7 +138,7 @@ int _currentIndex = 0;
             onTap: () {
               Navigator.push(
                 context,
-                MaterialPageRoute(builder: (context) => const MyApp()),
+                MaterialPageRoute(builder: (context) => const NavigationWrapper(initialIndex: 0)),
               );
             },
             child: _buildGlassmorphicButtonHome(context, Icons.home, 'Accueil'),

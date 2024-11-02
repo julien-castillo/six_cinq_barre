@@ -1,6 +1,6 @@
 import 'package:app_six_cinq_barre/gsheet_setup.dart';
+import 'package:app_six_cinq_barre/pages/navigation_wrapper.dart';
 import 'package:flutter/material.dart';
-import 'package:app_six_cinq_barre/main.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class ResourcesPage extends StatefulWidget {
@@ -102,7 +102,7 @@ class _ResourcesPageState extends State<ResourcesPage> {
           onTap: () {
             Navigator.pushReplacement(
               context,
-              MaterialPageRoute(builder: (context) => const MyApp()),
+              MaterialPageRoute(builder: (context) => const NavigationWrapper(initialIndex: 0)),
             );
           },
           child: _buildGlassmorphicButton(context, Icons.home, 'Accueil'),

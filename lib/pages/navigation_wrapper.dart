@@ -6,13 +6,10 @@ import 'package:app_six_cinq_barre/pages/concert_page.dart';
 
 class NavigationWrapper extends StatefulWidget {
   final int initialIndex;
-  final Widget child;
 
-  const NavigationWrapper(
-      {super.key, required this.initialIndex, required this.child});
+  const NavigationWrapper({super.key, required this.initialIndex});
 
   @override
-  // ignore: library_private_types_in_public_api
   _NavigationWrapperState createState() => _NavigationWrapperState();
 }
 
