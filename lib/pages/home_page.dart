@@ -64,11 +64,11 @@ class _HomePageState extends State<HomePage> {
         child: SingleChildScrollView(
           child: Column(
             children: [
-              Text(
-                "Bienvenue ${widget.musicianName}",
-                style: const TextStyle(fontSize: 18, color: Colors.orange),
-                textAlign: TextAlign.center,
-              ),
+              // Text(
+              //   "Bienvenue ${widget.musicianName}",
+              //   style: const TextStyle(fontSize: 18, color: Colors.orange),
+              //   textAlign: TextAlign.center,
+              // ),
               // const SizedBox(height: 10),
               _buildHeader(),
               const SizedBox(height: 10),
