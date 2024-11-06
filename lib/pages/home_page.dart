@@ -1,3 +1,4 @@
+import 'package:app_six_cinq_barre/pages/absences_page.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:app_six_cinq_barre/pages/contribution_page.dart';
@@ -15,48 +16,114 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-  Future<List> _loadData() async {
-    return await gsheetInformationsDetails!.values.map.allRows() ?? [];
-  }
-
   List dataFromSheet = [];
-  // String musicianName = 'Musicien';
+  bool isLoading = true;
+  String errorMessage = '';
 
   @override
   void initState() {
     super.initState();
-    // readDataInformationsFromSheet();
-    // _loadMusicianName();
+    loadData();
   }
 
-  // Future<void> _loadMusicianName() async {
-  //   final prefs = await SharedPreferences.getInstance();
-  //   setState(() {
-  //     musicianName = prefs.getString('musicianName') ?? 'Musicien';
-  //   });
+  Future<void> loadData() async {
+    setState(() {
+      isLoading = true;
+      errorMessage = '';
+    });
+
+    try {
+      final data = await readDataInformationsFromSheet();
+      setState(() {
+        dataFromSheet = data;
+        isLoading = false;
+      });
+    } catch (e) {
+      setState(() {
+        errorMessage = 'Erreur de chargement. Veuillez réessayer.';
+        isLoading = false;
+      });
+      print('Erreur lors du chargement des données : $e');
+    }
+  }
+
+  Future<List> readDataInformationsFromSheet() async {
+    const maxRetries = 3;
+    const retryDelay = Duration(seconds: 5);
+
+    for (var i = 0; i < maxRetries; i++) {
+      try {
+        return await gsheetInformationsDetails!.values.map.allRows() ?? [];
+      } catch (e) {
+        if (e.toString().contains('Quota exceeded')) {
+          if (i < maxRetries - 1) {
+            await Future.delayed(retryDelay);
+          } else {
+            rethrow;
+          }
+        } else {
+          rethrow;
+        }
+      }
+    }
+    throw Exception('Échec après $maxRetries tentatives');
+  }
+
+  // Future<void> readDataInformationsFromSheet() async {
+  //   dataFromSheet = (await gsheetInformationsDetails!.values.map.allRows())!;
+  //   setState(() {});
   // }
 
   @override
   Widget build(BuildContext context) {
-    return FutureBuilder<List>(
-      future: _loadData(),
-      builder: (context, snapshot) {
-        if (snapshot.connectionState == ConnectionState.waiting) {
-          return const Center(child: CircularProgressIndicator());
-        } else if (snapshot.hasError) {
-          return Center(child: Text('Erreur: ${snapshot.error}'));
-        } else {
-          final dataFromSheet = snapshot.data ?? [];
-          return _buildHomeContent(dataFromSheet);
-        }
-      },
+    return Scaffold(
+      backgroundColor: Colors.black,
+      body: Builder(
+        builder: (context) {
+          if (isLoading) {
+            return const Center(
+                child: CircularProgressIndicator(color: Colors.cyan));
+          } else if (errorMessage.isNotEmpty) {
+            return Center(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Text(errorMessage, style: TextStyle(color: Colors.white)),
+                  ElevatedButton(
+                    onPressed: loadData,
+                    child: const Text('Actualiser'),
+                    style:
+                        ElevatedButton.styleFrom(backgroundColor: Colors.cyan),
+                  ),
+                ],
+              ),
+            );
+          }
+          return FutureBuilder<void>(
+            future: readDataInformationsFromSheet(),
+            builder: (context, snapshot) {
+              if (snapshot.connectionState == ConnectionState.waiting) {
+                return const Center(
+                    child: CircularProgressIndicator(color: Colors.cyan));
+              } else if (snapshot.hasError) {
+                return Center(
+                    child: Text('Erreur de chargement des données',
+                        style: TextStyle(color: Colors.white)));
+              } else {
+                return _buildHomeContent();
+              }
+            },
+          );
+        },
+      ),
     );
   }
 
-  Widget _buildHomeContent(List dataFromSheet) {
-    final informationsText = dataFromSheet.isNotEmpty && dataFromSheet[0]['informations'] != null
-        ? dataFromSheet[0]['informations']
-        : 'Aucune information particulière pour le moment ;-)';
+  Widget _buildHomeContent() {
+    final informationsText =
+        dataFromSheet.isNotEmpty && dataFromSheet[0]['informations'] != null
+            ? dataFromSheet[0]['informations']
+            : 'Aucune information particulière pour le moment ;-)';
 
     return Container(
       color: Colors.black,
@@ -69,7 +136,7 @@ class _HomePageState extends State<HomePage> {
               //   style: const TextStyle(fontSize: 18, color: Colors.orange),
               //   textAlign: TextAlign.center,
               // ),
-              // const SizedBox(height: 10),
+              const SizedBox(height: 10),
               _buildHeader(),
               const SizedBox(height: 10),
               _buildGlassmorphicRectangleInformations(
@@ -79,6 +146,22 @@ class _HomePageState extends State<HomePage> {
               ),
               const SizedBox(height: 20),
               _buildGridView(),
+              const SizedBox(height: 20),
+              _buildGlassmorphicCardAbsences(
+                context,
+                'Absences',
+                // Icons.picture_as_pdf,
+                Colors.transparent,
+                const Color(0xFF048B9A),
+                AbsencesPage(musicianName: widget.musicianName,),
+                const BorderRadius.only(
+                  // topRight: Radius.circular(30),
+                  bottomRight: Radius.circular(30),
+                  // topLeft: Radius.circular(30),
+                  bottomLeft: Radius.circular(30),
+                ),
+              ),
+              const SizedBox(height: 10),
             ],
           ),
         ),
@@ -179,6 +262,7 @@ class _HomePageState extends State<HomePage> {
               bottomLeft: Radius.circular(30),
             ),
           ),
+          // const SizedBox.shrink(),
         ],
       ),
     );
@@ -270,6 +354,56 @@ class _HomePageState extends State<HomePage> {
             textAlign: TextAlign.center,
           ),
         ],
+      ),
+    );
+  }
+
+  Widget _buildGlassmorphicCardAbsences(
+    BuildContext context,
+    String title,
+    // IconData icon,
+    Color backgroundColor,
+    Color overlayColor,
+    Widget page,
+    BorderRadius borderRadius,
+  ) {
+    return GestureDetector(
+      onTap: () {
+        Navigator.push(
+          context,
+          MaterialPageRoute(builder: (context) => page),
+        );
+      },
+      child: SizedBox(
+        width: 180,
+        height: 60,
+        child: Container(
+          decoration: BoxDecoration(
+            borderRadius: borderRadius,
+            color: overlayColor.withOpacity(0.2),
+            border: Border.all(color: Colors.cyan.withOpacity(0.5), width: 1.5),
+            boxShadow: [
+              BoxShadow(
+                color: Colors.black.withOpacity(0.2),
+                blurRadius: 10.0,
+                spreadRadius: 2.0,
+              ),
+            ],
+          ),
+          child: Center(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                // Icon(icon, size: 50, color: Colors.cyan),
+                const SizedBox(height: 5),
+                Text(
+                  title,
+                  style: const TextStyle(fontSize: 20, color: Colors.cyan),
+                ),
+              ],
+            ),
+          ),
+        ),
       ),
     );
   }

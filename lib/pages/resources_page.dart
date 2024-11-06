@@ -51,73 +51,100 @@ class _ResourcesPageState extends State<ResourcesPage> {
       backgroundColor: Colors.black,
       body: dataFromSheet.isEmpty
           ? const Center(child: CircularProgressIndicator(color: Colors.cyan))
-          : ListView.builder(
-              padding: const EdgeInsets.all(16.0),
-              itemCount: dataFromSheet.length,
-              itemBuilder: (context, index) {
-                final row = dataFromSheet[index];
-                return Column(
-                  crossAxisAlignment: CrossAxisAlignment.stretch,
-                  children: [
-                    if ((row['partitions_subtitle'] ?? "").isNotEmpty ||
-                        (row['partitions_text'] ?? "").isNotEmpty ||
-                        (row['partitions_link'] ?? "").isNotEmpty)
-                      Padding(
-                        padding: const EdgeInsets.symmetric(vertical: 10.0),
-                        child: _buildGlassmorphicRectangle1(
-                          context,
-                          Icons.music_note,
-                          row['partitions_subtitle'] ?? "",
-                          row['partitions_text'] ?? "",
-                          row['partitions_link'] ?? "",
-                        ),
-                      ),
-                    if ((row['ressource_title_icon'] ?? "").isNotEmpty ||
-                        (row['ressource_text_with_icon'] ?? "").isNotEmpty)
-                      Padding(
-                        padding: const EdgeInsets.symmetric(vertical: 10.0),
-                        child: _buildGlassmorphicRectangle2(
-                          context,
-                          row['ressource_title_icon'] ?? "",
-                          row['ressource_text_with_icon'] ?? "",
-                        ),
-                      ),
-                    if ((row['ressource_title'] ?? "").isNotEmpty ||
-                        (row['ressource_text'] ?? "").isNotEmpty)
-                      Padding(
-                        padding: const EdgeInsets.symmetric(vertical: 10.0),
-                        child: _buildGlassmorphicRectangle3(
-                          context,
-                          row['ressource_title'] ?? "",
-                          row['ressource_text'] ?? "",
-                        ),
-                      ),
-                  ],
-                );
-              },
+          : Column(
+              children: [
+                Expanded(
+                  child: ListView.builder(
+                    padding: const EdgeInsets.all(16.0),
+                    itemCount: dataFromSheet.length + 1,
+                    itemBuilder: (context, index) {
+                      if (index == dataFromSheet.length) {
+                        // Affiche le bouton "Accueil" après le dernier élément
+                        return Column(
+                          crossAxisAlignment: CrossAxisAlignment.end,
+                          children: [
+                            const SizedBox(height: 10),
+                            _buildGlassmorphicButton(
+                                context, Icons.home, 'Accueil'),
+                          ],
+                        );
+                      }
+                      final row = dataFromSheet[index];
+                      return Column(
+                        crossAxisAlignment: CrossAxisAlignment.stretch,
+                        children: [
+                          if ((row['partitions_subtitle'] ?? "").isNotEmpty ||
+                              (row['partitions_text'] ?? "").isNotEmpty ||
+                              (row['partitions_link'] ?? "").isNotEmpty)
+                            Padding(
+                              padding:
+                                  const EdgeInsets.symmetric(vertical: 10.0),
+                              child: _buildGlassmorphicRectangle1(
+                                context,
+                                Icons.music_note,
+                                row['partitions_subtitle'] ?? "",
+                                row['partitions_text'] ?? "",
+                                row['partitions_link'] ?? "",
+                              ),
+                            ),
+                          if ((row['ressource_title_icon'] ?? "").isNotEmpty ||
+                              (row['ressource_text_with_icon'] ?? "")
+                                  .isNotEmpty)
+                            Padding(
+                              padding:
+                                  const EdgeInsets.symmetric(vertical: 10.0),
+                              child: _buildGlassmorphicRectangle2(
+                                context,
+                                row['ressource_title_icon'] ?? "",
+                                row['ressource_text_with_icon'] ?? "",
+                              ),
+                            ),
+                          if ((row['ressource_title'] ?? "").isNotEmpty ||
+                              (row['ressource_text'] ?? "").isNotEmpty)
+                            Padding(
+                              padding:
+                                  const EdgeInsets.symmetric(vertical: 10.0),
+                              child: _buildGlassmorphicRectangle3(
+                                context,
+                                row['ressource_title'] ?? "",
+                                row['ressource_text'] ?? "",
+                              ),
+                            ),
+                        ],
+                      );
+                    },
+                  ),
+                ),
+                // const SizedBox(height: 10),
+                // Align(
+                //   alignment: Alignment.centerRight,
+                //   child:
+                //       _buildGlassmorphicButton(context, Icons.home, 'Accueil'),
+                // ),
+              ],
             ),
-      floatingActionButtonLocation: FloatingActionButtonLocation.endDocked,
-      floatingActionButton: Padding(
-        padding: const EdgeInsets.only(bottom: 48.0),
-        child: GestureDetector(
-          onTap: () async {
-  final prefs = await SharedPreferences.getInstance();
-  final musicianName = prefs.getString('musicianName') ?? 'Musicien';
-  
-  Navigator.pushAndRemoveUntil(
-    context,
-    MaterialPageRoute(
-      builder: (context) => NavigationWrapper(
-        initialIndex: 0,
-        musicianName: musicianName,
-      ),
-    ),
-    (Route<dynamic> route) => false,
-  );
-},
-          child: _buildGlassmorphicButton(context, Icons.home, 'Accueil'),
-        ),
-      ),
+      // floatingActionButtonLocation: FloatingActionButtonLocation.endDocked,
+      // floatingActionButton: Padding(
+      //   padding: const EdgeInsets.only(bottom: 48.0),
+      //   child: GestureDetector(
+      //     onTap: () async {
+      //       final prefs = await SharedPreferences.getInstance();
+      //       final musicianName = prefs.getString('musicianName') ?? 'Musicien';
+
+      //       Navigator.pushAndRemoveUntil(
+      //         context,
+      //         MaterialPageRoute(
+      //           builder: (context) => NavigationWrapper(
+      //             initialIndex: 0,
+      //             musicianName: musicianName,
+      //           ),
+      //         ),
+      //         (Route<dynamic> route) => false,
+      //       );
+      //     },
+      //     child: _buildGlassmorphicButton(context, Icons.home, 'Accueil'),
+      //   ),
+      // ),
     );
   }
 
@@ -151,11 +178,11 @@ class _ResourcesPageState extends State<ResourcesPage> {
             children: [
               Icon(icon, size: 30, color: const Color(0xFF00BCD4)),
               const SizedBox(width: 10),
-                Text(
-                  "Partitions",
-                  style: const TextStyle(fontSize: 20, color: Colors.cyan),
-                  textAlign: TextAlign.center,
-                ),
+              Text(
+                "Partitions",
+                style: const TextStyle(fontSize: 20, color: Colors.cyan),
+                textAlign: TextAlign.center,
+              ),
             ],
           ),
           const SizedBox(height: 10),
@@ -223,11 +250,11 @@ class _ResourcesPageState extends State<ResourcesPage> {
           Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-                Text(
-                  title,
-                  style: const TextStyle(fontSize: 20, color: Color(0xFF00BCD4)),
-                  textAlign: TextAlign.center,
-                ),
+              Text(
+                title,
+                style: const TextStyle(fontSize: 20, color: Color(0xFF00BCD4)),
+                textAlign: TextAlign.center,
+              ),
             ],
           ),
           const SizedBox(height: 10),
@@ -241,7 +268,8 @@ class _ResourcesPageState extends State<ResourcesPage> {
     );
   }
 
-  Widget _buildGlassmorphicRectangle3(BuildContext context, String title, String text) {
+  Widget _buildGlassmorphicRectangle3(
+      BuildContext context, String title, String text) {
     bool isExpanded = false;
     return StatefulBuilder(
       builder: (BuildContext context, StateSetter setState) {
@@ -259,7 +287,8 @@ class _ResourcesPageState extends State<ResourcesPage> {
             decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(20),
               color: Colors.cyan.withOpacity(0.2),
-              border: Border.all(color: Colors.cyan.withOpacity(0.5), width: 1.5),
+              border:
+                  Border.all(color: Colors.cyan.withOpacity(0.5), width: 1.5),
               boxShadow: [
                 BoxShadow(
                   color: Colors.black.withOpacity(0.2),
@@ -277,7 +306,8 @@ class _ResourcesPageState extends State<ResourcesPage> {
                     Expanded(
                       child: Text(
                         title,
-                        style: const TextStyle(fontSize: 20, color: Colors.cyan),
+                        style:
+                            const TextStyle(fontSize: 20, color: Colors.cyan),
                         textAlign: TextAlign.center,
                       ),
                     ),
@@ -294,7 +324,8 @@ class _ResourcesPageState extends State<ResourcesPage> {
                       Text(
                         text,
                         textAlign: TextAlign.center,
-                        style: const TextStyle(fontSize: 18, color: Colors.white),
+                        style:
+                            const TextStyle(fontSize: 18, color: Colors.white),
                       ),
                     ],
                   ),
@@ -308,27 +339,43 @@ class _ResourcesPageState extends State<ResourcesPage> {
 
   Widget _buildGlassmorphicButton(
       BuildContext context, IconData icon, String title) {
-    return Container(
-      width: 60,
-      height: 60,
-      decoration: BoxDecoration(
-        borderRadius: const BorderRadius.only(
-          topLeft: Radius.circular(20),
-          topRight: Radius.circular(20),
-          bottomLeft: Radius.circular(20),
-        ),
-        color: Colors.cyan.withOpacity(0.2),
-        border: Border.all(color: Colors.cyan.withOpacity(0.5), width: 1.5),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withOpacity(0.2),
-            blurRadius: 10.0,
-            spreadRadius: 2.0,
+    return GestureDetector(
+      onTap: () async {
+        final prefs = await SharedPreferences.getInstance();
+        final musicianName = prefs.getString('musicianName') ?? 'Musicien';
+        Navigator.pushAndRemoveUntil(
+          context,
+          MaterialPageRoute(
+            builder: (context) => NavigationWrapper(
+              initialIndex: 0,
+              musicianName: musicianName,
+            ),
           ),
-        ],
-      ),
-      child: Center(
-        child: Icon(icon, size: 30, color: Colors.cyan),
+          (Route<dynamic> route) => false,
+        );
+      },
+      child: Container(
+        width: 60,
+        height: 60,
+        decoration: BoxDecoration(
+          borderRadius: const BorderRadius.only(
+            topLeft: Radius.circular(20),
+            topRight: Radius.circular(20),
+            bottomLeft: Radius.circular(20),
+          ),
+          color: Colors.cyan.withOpacity(0.2),
+          border: Border.all(color: Colors.cyan.withOpacity(0.5), width: 1.5),
+          boxShadow: [
+            BoxShadow(
+              color: Colors.black.withOpacity(0.2),
+              blurRadius: 10.0,
+              spreadRadius: 2.0,
+            ),
+          ],
+        ),
+        child: Center(
+          child: Icon(icon, size: 30, color: Colors.cyan),
+        ),
       ),
     );
   }

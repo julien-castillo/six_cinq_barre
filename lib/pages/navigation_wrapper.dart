@@ -1,3 +1,4 @@
+import 'package:app_six_cinq_barre/pages/login_page.dart';
 import 'package:flutter/material.dart';
 import 'package:curved_navigation_bar/curved_navigation_bar.dart';
 import 'package:app_six_cinq_barre/pages/home_page.dart';
@@ -44,6 +45,17 @@ class _NavigationWrapperState extends State<NavigationWrapper> {
           Text("Liste des Répétitions"),
           Text("Concerts"),
         ][_currentIndex],
+        actions: [
+        IconButton(
+          icon: const Icon(Icons.logout),
+          onPressed: () {
+            Navigator.pushReplacement(
+              context,
+              MaterialPageRoute(builder: (context) => LoginPage()),
+            );
+          },
+        ),
+      ],
       ),
       body: Column(
         children: [

@@ -156,134 +156,118 @@ class _MusiciansPageState extends State<MusiciansPage> {
       ),
       backgroundColor: Colors.black,
       body: SafeArea(
-      child: SingleChildScrollView(
-        child: Container(
-          height: MediaQuery.of(context).size.height,
-          child: Column(
-            children: [
-              Padding(
-                padding: const EdgeInsets.only(top: 0),
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.end,
-                  children: [
-                    const SizedBox(
-                        height:
-                            20),
-                    _buildBirthdaySection(
-                        'Anniversaire(s) du mois', _currentMonthBirthdays),
-                    const SizedBox(
-                        height:
-                            20), // Espace réduit entre les deux sections d'anniversaires
-                    _buildBirthdaySection(
-                        'Anniversaire(s) en $nextMonthName', _nextMonthBirthdays),
-                    const SizedBox(
-                        height:
-                            10), // Espace réduit entre les deux sections d'anniversaires
-                  ],
-                ),
-              ),
-              Expanded(
-                child: GridView.count(
-                  crossAxisCount: 2,
-                  padding: const EdgeInsets.all(20.0),
-                  mainAxisSpacing: 20.0,
-                  crossAxisSpacing: 20.0,
-                  shrinkWrap: true,
-                  physics: const ClampingScrollPhysics(),
-                  children: [
-                    _buildGlassmorphicCard(
-                      context,
-                      'Cordes',
-                      'assets/images/cello.svg',
-                      const Color.fromARGB(0, 0, 0, 0),
-                      const Color(0xFF048B9A),
-                      const StringsPage(),
-                      const BorderRadius.only(
-                        topLeft: Radius.circular(30),
-                        topRight: Radius.circular(30),
-                        bottomLeft: Radius.circular(30),
-                      ),
-                      110.0,
-                      Colors.cyan,
-                    ),
-                    _buildGlassmorphicCard(
-                      context,
-                      'Bois',
-                      'assets/images/oboe.svg',
-                      const Color.fromARGB(0, 0, 0, 0),
-                      const Color(0xFF048B9A),
-                      const WoodwindsPage(),
-                      const BorderRadius.only(
-                        topLeft: Radius.circular(30),
-                        topRight: Radius.circular(30),
-                        bottomRight: Radius.circular(30),
-                      ),
-                      110.0,
-                      Colors.cyan,
-                    ),
-                    _buildGlassmorphicCard(
-                      context,
-                      'Cuivres',
-                      'assets/images/horn.svg',
-                      const Color.fromARGB(0, 0, 0, 0),
-                      const Color(0xFF048B9A),
-                      const BrassPage(),
-                      const BorderRadius.only(
-                        topLeft: Radius.circular(30),
-                        bottomRight: Radius.circular(30),
-                        bottomLeft: Radius.circular(30),
-                      ),
-                      110.0,
-                      Colors.cyan,
-                    ),
-                    _buildGlassmorphicCard(
-                      context,
-                      'Percussions & harpe',
-                      'assets/images/timpani_harp.svg',
-                      const Color.fromARGB(0, 0, 0, 0),
-                      const Color(0xFF048B9A),
-                      const PercussionsPage(),
-                      const BorderRadius.only(
-                        topRight: Radius.circular(30),
-                        bottomLeft: Radius.circular(30),
-                        bottomRight: Radius.circular(30),
-                      ),
-                      110.0,
-                      Colors.cyan,
-                    ),
-                  ],
-                ),
-              ),
-              Align(
-                alignment: Alignment.bottomRight,
-                child: Padding(
-                  padding: const EdgeInsets.only(bottom: 20.0, right: 20.0),
-                  child: GestureDetector(
-                    onTap: () async {
-  final prefs = await SharedPreferences.getInstance();
-  final musicianName = prefs.getString('musicianName') ?? 'Musicien';
-  
-  Navigator.pushAndRemoveUntil(
-    context,
-    MaterialPageRoute(
-      builder: (context) => NavigationWrapper(
-        initialIndex: 0,
-        musicianName: musicianName,
-      ),
-    ),
-    (Route<dynamic> route) => false,
-  );
-},
-                    child: _buildGlassmorphicButton(
-                        context, Icons.home, 'Accueil'),
+        child: SingleChildScrollView(
+          child: Container(
+            height: MediaQuery.of(context).size.height,
+            child: Column(
+              children: [
+                Padding(
+                  padding: const EdgeInsets.only(top: 0),
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.end,
+                    children: [
+                      const SizedBox(height: 20),
+                      _buildBirthdaySection(
+                          'Anniversaire(s) du mois', _currentMonthBirthdays),
+                      const SizedBox(
+                          height:
+                              20), // Espace réduit entre les deux sections d'anniversaires
+                      _buildBirthdaySection('Anniversaire(s) en $nextMonthName',
+                          _nextMonthBirthdays),
+                      const SizedBox(
+                          height:
+                              10), // Espace réduit entre les deux sections d'anniversaires
+                    ],
                   ),
                 ),
-              ),
-            ],
+                Expanded(
+                  child: GridView.count(
+                    crossAxisCount: 2,
+                    padding: const EdgeInsets.all(20.0),
+                    mainAxisSpacing: 20.0,
+                    crossAxisSpacing: 20.0,
+                    shrinkWrap: true,
+                    physics: const ClampingScrollPhysics(),
+                    children: [
+                      _buildGlassmorphicCard(
+                        context,
+                        'Cordes',
+                        'assets/images/cello.svg',
+                        const Color.fromARGB(0, 0, 0, 0),
+                        const Color(0xFF048B9A),
+                        const StringsPage(),
+                        const BorderRadius.only(
+                          topLeft: Radius.circular(30),
+                          topRight: Radius.circular(30),
+                          bottomLeft: Radius.circular(30),
+                        ),
+                        110.0,
+                        Colors.cyan,
+                      ),
+                      _buildGlassmorphicCard(
+                        context,
+                        'Bois',
+                        'assets/images/oboe.svg',
+                        const Color.fromARGB(0, 0, 0, 0),
+                        const Color(0xFF048B9A),
+                        const WoodwindsPage(),
+                        const BorderRadius.only(
+                          topLeft: Radius.circular(30),
+                          topRight: Radius.circular(30),
+                          bottomRight: Radius.circular(30),
+                        ),
+                        110.0,
+                        Colors.cyan,
+                      ),
+                      _buildGlassmorphicCard(
+                        context,
+                        'Cuivres',
+                        'assets/images/horn.svg',
+                        const Color.fromARGB(0, 0, 0, 0),
+                        const Color(0xFF048B9A),
+                        const BrassPage(),
+                        const BorderRadius.only(
+                          topLeft: Radius.circular(30),
+                          bottomRight: Radius.circular(30),
+                          bottomLeft: Radius.circular(30),
+                        ),
+                        110.0,
+                        Colors.cyan,
+                      ),
+                      _buildGlassmorphicCard(
+                        context,
+                        'Percussions & harpe',
+                        'assets/images/timpani_harp.svg',
+                        const Color.fromARGB(0, 0, 0, 0),
+                        const Color(0xFF048B9A),
+                        const PercussionsPage(),
+                        const BorderRadius.only(
+                          topRight: Radius.circular(30),
+                          bottomLeft: Radius.circular(30),
+                          bottomRight: Radius.circular(30),
+                        ),
+                        110.0,
+                        Colors.cyan,
+                      ),
+                      const SizedBox.shrink(),
+                      Align(
+                  alignment: Alignment.topRight,
+                  child:
+                      _buildGlassmorphicButton(context, Icons.home, 'Accueil'),
+                ),
+                    ],
+                  ),
+                  
+                ),
+                
+              ],
+            ),
+            
           ),
+          
         ),
+        
       ),
-    ),
     );
   }
 
@@ -345,17 +329,83 @@ class _MusiciansPageState extends State<MusiciansPage> {
     );
   }
 
+  // Widget _buildGlassmorphicButton(
+  //     BuildContext context, IconData icon, String title) {
+  //   return Container(
+  //     width: 60,
+  //     height: 60,
+  //     decoration: BoxDecoration(
+  //       borderRadius: const BorderRadius.only(
+  //         topLeft: Radius.circular(20),
+  //         topRight: Radius.circular(20),
+  //         bottomLeft: Radius.circular(20),
+  //       ),
+  //       color: Colors.cyan.withOpacity(0.2),
+  //       border: Border.all(color: Colors.cyan.withOpacity(0.5), width: 1.5),
+  //       boxShadow: [
+  //         BoxShadow(
+  //           color: Colors.black.withOpacity(0.2),
+  //           blurRadius: 10.0,
+  //           spreadRadius: 2.0,
+  //         ),
+  //       ],
+  //     ),
+  //     child: Center(
+  //       child: Icon(icon, size: 30, color: Colors.cyan),
+  //     ),
+  //   );
+  // }
+
   Widget _buildGlassmorphicButton(
       BuildContext context, IconData icon, String title) {
-    return Container(
-      width: 60,
-      height: 60,
-      decoration: BoxDecoration(
-        borderRadius: const BorderRadius.only(
-          topLeft: Radius.circular(20),
-          topRight: Radius.circular(20),
-          bottomLeft: Radius.circular(20),
+    return GestureDetector(
+      onTap: () async {
+        final prefs = await SharedPreferences.getInstance();
+        final musicianName = prefs.getString('musicianName') ?? 'Musicien';
+        Navigator.pushAndRemoveUntil(
+          context,
+          MaterialPageRoute(
+            builder: (context) => NavigationWrapper(
+              initialIndex: 0,
+              musicianName: musicianName,
+            ),
+          ),
+          (Route<dynamic> route) => false,
+        );
+      },
+      child: Container(
+        width: 60,
+        height: 60,
+        decoration: BoxDecoration(
+          borderRadius: const BorderRadius.only(
+            topLeft: Radius.circular(20),
+            topRight: Radius.circular(20),
+            bottomLeft: Radius.circular(20),
+          ),
+          color: Colors.cyan.withOpacity(0.2),
+          border: Border.all(color: Colors.cyan.withOpacity(0.5), width: 1.5),
+          boxShadow: [
+            BoxShadow(
+              color: Colors.black.withOpacity(0.2),
+              blurRadius: 10.0,
+              spreadRadius: 2.0,
+            ),
+          ],
         ),
+        child: Center(
+          child: Icon(icon, size: 30, color: Colors.cyan),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildBirthdaySection(
+      String title, List<Map<String, dynamic>> birthdays) {
+    return Container(
+      width: 340,
+      padding: const EdgeInsets.all(16.0),
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(20),
         color: Colors.cyan.withOpacity(0.2),
         border: Border.all(color: Colors.cyan.withOpacity(0.5), width: 1.5),
         boxShadow: [
@@ -366,90 +416,67 @@ class _MusiciansPageState extends State<MusiciansPage> {
           ),
         ],
       ),
-      child: Center(
-        child: Icon(icon, size: 30, color: Colors.cyan),
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              const Icon(Icons.cake,
+                  color: Colors.yellow), // Icône d'anniversaire
+              const SizedBox(width: 8), // Espacement entre l'icône et le texte
+              Text(
+                title,
+                style: const TextStyle(fontSize: 20, color: Colors.cyan),
+              ),
+            ],
+          ),
+          const SizedBox(height: 10),
+          birthdays.isNotEmpty
+              ? Wrap(
+                  spacing: 10.0,
+                  children: birthdays.map((birthday) {
+                    // Vérifier si l'anniversaire est aujourd'hui
+                    bool isToday = _isToday(birthday['birthday']);
+
+                    // Afficher "aujourd'hui" ou la date formatée
+                    String displayDate = isToday
+                        ? 'aujourd\'hui !'
+                        : _formatBirthdayDate(birthday['birthday']);
+
+                    return Container(
+                      padding: const EdgeInsets.all(4.0),
+                      child: Text(
+                        '- ${birthday['musicien']} ($displayDate)',
+                        style: TextStyle(
+                          color: isToday ? Colors.orange : Colors.white,
+                          fontSize: 18,
+                        ),
+                      ),
+                    );
+                  }).toList(),
+                )
+              : const Text(
+                  "Aucun anniversaire à souhaiter",
+                  style: TextStyle(
+                      color: Colors.white,
+                      fontSize: 18,
+                      fontStyle: FontStyle.italic),
+                ),
+        ],
       ),
     );
   }
 
-  Widget _buildBirthdaySection(String title, List<Map<String, dynamic>> birthdays) {
-  return Container(
-    width: 340,
-    padding: const EdgeInsets.all(16.0),
-    decoration: BoxDecoration(
-      borderRadius: BorderRadius.circular(20),
-      color: Colors.cyan.withOpacity(0.2),
-      border: Border.all(color: Colors.cyan.withOpacity(0.5), width: 1.5),
-      boxShadow: [
-        BoxShadow(
-          color: Colors.black.withOpacity(0.2),
-          blurRadius: 10.0,
-          spreadRadius: 2.0,
-        ),
-      ],
-    ),
-    child: Column(
-      mainAxisSize: MainAxisSize.min,
-      children: [
-        Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            const Icon(Icons.cake, color: Colors.yellow), // Icône d'anniversaire
-            const SizedBox(width: 8), // Espacement entre l'icône et le texte
-            Text(
-              title,
-              style: const TextStyle(fontSize: 20, color: Colors.cyan),
-            ),
-          ],
-        ),
-        const SizedBox(height: 10),
-        birthdays.isNotEmpty
-            ? Wrap(
-                spacing: 10.0,
-                children: birthdays.map((birthday) {
-                  // Vérifier si l'anniversaire est aujourd'hui
-                  bool isToday = _isToday(birthday['birthday']);
-                  
-                  // Afficher "aujourd'hui" ou la date formatée
-                  String displayDate = isToday
-                      ? 'aujourd\'hui !'
-                      : _formatBirthdayDate(birthday['birthday']);
-                  
-                  return Container(
-                    padding: const EdgeInsets.all(4.0),
-                    child: Text(
-                      '- ${birthday['musicien']} ($displayDate)',
-                      style: TextStyle(
-                        color: isToday ? Colors.orange : Colors.white,
-                        fontSize: 18,
-                      ),
-                    ),
-                  );
-                }).toList(),
-              )
-            : const Text(
-                "Aucun anniversaire à souhaiter",
-                style: TextStyle(
-                    color: Colors.white,
-                    fontSize: 18,
-                    fontStyle: FontStyle.italic),
-              ),
-      ],
-    ),
-  );
-}
+  String _formatBirthdayDate(String date) {
+    // Parser la date pour récupérer le jour et le mois
+    DateTime parsedDate = DateFormat('dd/MM/yyyy').parse(date);
+    return DateFormat('d MMMM').format(parsedDate); // Format "12 novembre"
+  }
 
-String _formatBirthdayDate(String date) {
-  // Parser la date pour récupérer le jour et le mois
-  DateTime parsedDate = DateFormat('dd/MM/yyyy').parse(date);
-  return DateFormat('d MMMM').format(parsedDate); // Format "12 novembre"
-}
-
-bool _isToday(String date) {
-  DateTime parsedDate = DateFormat('dd/MM/yyyy').parse(date);
-  DateTime today = DateTime.now();
-  return parsedDate.day == today.day && parsedDate.month == today.month;
-}
-
-
+  bool _isToday(String date) {
+    DateTime parsedDate = DateFormat('dd/MM/yyyy').parse(date);
+    DateTime today = DateTime.now();
+    return parsedDate.day == today.day && parsedDate.month == today.month;
+  }
 }

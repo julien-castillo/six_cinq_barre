@@ -35,59 +35,49 @@ class _ProgramPageState extends State<ProgramPage> {
   }
 
   @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-          centerTitle: true,
-          backgroundColor: Colors.cyan,
-          title: const Text('Programme')),
-      backgroundColor: Colors.black,
-      body: dataFromSheet.isEmpty
-          ? const Center(child: CircularProgressIndicator(color: Colors.cyan))
-          : ListView.builder(
-              padding: const EdgeInsets.all(16.0),
-              itemCount: dataFromSheet.length,
-              itemBuilder: (context, index) {
-                final row = dataFromSheet[index];
-                return Padding(
-                  padding: const EdgeInsets.symmetric(vertical: 10.0),
-                  child: _buildGlassmorphicRectangleProgram(
-                    context,
-                    Icons.theater_comedy,
-                    row['title'] ?? "",
-                    row['subtitle'] ?? "",
-                    row['text'] ?? "",
-                  ),
-                );
-              },
-            ),
-      floatingActionButtonLocation: FloatingActionButtonLocation.endDocked,
-      floatingActionButton: Padding(
-        padding: const EdgeInsets.only(bottom: 48.0), // Ajuste la valeur ici
-        child: GestureDetector(
-          onTap: () async {
-  final prefs = await SharedPreferences.getInstance();
-  final musicianName = prefs.getString('musicianName') ?? 'Musicien';
-  
-  Navigator.pushAndRemoveUntil(
-    context,
-    MaterialPageRoute(
-      builder: (context) => NavigationWrapper(
-        initialIndex: 0,
-        musicianName: musicianName,
-      ),
+Widget build(BuildContext context) {
+  return Scaffold(
+    appBar: AppBar(
+      centerTitle: true,
+      backgroundColor: Colors.cyan,
+      title: const Text('Programme'),
     ),
-    (Route<dynamic> route) => false,
+    backgroundColor: Colors.black,
+    body: dataFromSheet.isEmpty
+        ? const Center(child: CircularProgressIndicator(color: Colors.cyan))
+        : ListView.builder(
+            padding: const EdgeInsets.all(16.0),
+            itemCount: dataFromSheet.length + 1, // Augmente itemCount de 1
+            itemBuilder: (context, index) {
+              if (index == dataFromSheet.length) {
+                // Affiche le bouton "Accueil" après le dernier élément
+                return Column(
+                  crossAxisAlignment: CrossAxisAlignment.end,
+                  children: [
+                    const SizedBox(height: 10),
+                    _buildGlassmorphicButton(context, Icons.home, 'Accueil'),
+                  ],
+                );
+              }
+              final row = dataFromSheet[index];
+              return Padding(
+                padding: const EdgeInsets.symmetric(vertical: 10.0),
+                child: _buildGlassmorphicRectangleProgram(
+                  context,
+                  Icons.theater_comedy,
+                  row['title'] ?? "",
+                  row['subtitle'] ?? "",
+                  row['text'] ?? "",
+                ),
+              );
+            },
+          ),
   );
-},
-          child: _buildGlassmorphicButton(context, Icons.home, 'Accueil'),
-        ),
-      ),
-    );
-  }
+}
 
-  Widget _buildGlassmorphicRectangleProgram(
-      BuildContext context, IconData icon, String title, String subtitle, String text) {
+
+  Widget _buildGlassmorphicRectangleProgram(BuildContext context, IconData icon,
+      String title, String subtitle, String text) {
     return Container(
       width: 340,
       padding: const EdgeInsets.all(16.0),
@@ -139,27 +129,43 @@ class _ProgramPageState extends State<ProgramPage> {
 
   Widget _buildGlassmorphicButton(
       BuildContext context, IconData icon, String title) {
-    return Container(
-      width: 60,
-      height: 60,
-      decoration: BoxDecoration(
-        borderRadius: const BorderRadius.only(
-          topLeft: Radius.circular(20),
-          topRight: Radius.circular(20),
-          bottomLeft: Radius.circular(20),
-        ),
-        color: Colors.cyan.withOpacity(0.2),
-        border: Border.all(color: Colors.cyan.withOpacity(0.5), width: 1.5),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withOpacity(0.2),
-            blurRadius: 10.0,
-            spreadRadius: 2.0,
+    return GestureDetector(
+      onTap: () async {
+        final prefs = await SharedPreferences.getInstance();
+        final musicianName = prefs.getString('musicianName') ?? 'Musicien';
+        Navigator.pushAndRemoveUntil(
+          context,
+          MaterialPageRoute(
+            builder: (context) => NavigationWrapper(
+              initialIndex: 0,
+              musicianName: musicianName,
+            ),
           ),
-        ],
-      ),
-      child: Center(
-        child: Icon(icon, size: 30, color: Colors.cyan),
+          (Route<dynamic> route) => false,
+        );
+      },
+      child: Container(
+        width: 60,
+        height: 60,
+        decoration: BoxDecoration(
+          borderRadius: const BorderRadius.only(
+            topLeft: Radius.circular(20),
+            topRight: Radius.circular(20),
+            bottomLeft: Radius.circular(20),
+          ),
+          color: Colors.cyan.withOpacity(0.2),
+          border: Border.all(color: Colors.cyan.withOpacity(0.5), width: 1.5),
+          boxShadow: [
+            BoxShadow(
+              color: Colors.black.withOpacity(0.2),
+              blurRadius: 10.0,
+              spreadRadius: 2.0,
+            ),
+          ],
+        ),
+        child: Center(
+          child: Icon(icon, size: 30, color: Colors.cyan),
+        ),
       ),
     );
   }
