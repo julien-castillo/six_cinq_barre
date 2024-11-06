@@ -1,3 +1,4 @@
+import 'package:app_six_cinq_barre/pages/login_page.dart';
 import 'package:flutter/material.dart';
 import 'package:curved_navigation_bar/curved_navigation_bar.dart';
 import 'package:app_six_cinq_barre/pages/home_page.dart';
@@ -6,13 +7,15 @@ import 'package:app_six_cinq_barre/pages/concert_page.dart';
 
 class NavigationWrapper extends StatefulWidget {
   final int initialIndex;
-  final Widget child;
+  final String musicianName;
 
-  const NavigationWrapper(
-      {super.key, required this.initialIndex, required this.child});
+  const NavigationWrapper({
+    Key? key,
+    required this.initialIndex,
+    required this.musicianName,
+  }) : super(key: key);
 
   @override
-  // ignore: library_private_types_in_public_api
   _NavigationWrapperState createState() => _NavigationWrapperState();
 }
 
@@ -37,11 +40,22 @@ class _NavigationWrapperState extends State<NavigationWrapper> {
       appBar: AppBar(
         centerTitle: true,
         backgroundColor: Colors.cyan,
-        title: const [
-          Text("Accueil"),
+        title:  [
+          Text("Accueil - ${widget.musicianName}"),
           Text("Liste des Répétitions"),
           Text("Concerts"),
         ][_currentIndex],
+        actions: [
+        IconButton(
+          icon: const Icon(Icons.logout),
+          onPressed: () {
+            Navigator.pushReplacement(
+              context,
+              MaterialPageRoute(builder: (context) => LoginPage()),
+            );
+          },
+        ),
+      ],
       ),
       body: Column(
         children: [
@@ -51,7 +65,7 @@ class _NavigationWrapperState extends State<NavigationWrapper> {
           ),
           Expanded(
             child: [
-              const HomePage(),
+              HomePage(musicianName: widget.musicianName),
               const RehearsalPage(),
               const ConcertPage(),
             ][_currentIndex],

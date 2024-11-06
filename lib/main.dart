@@ -1,11 +1,9 @@
-import 'package:app_six_cinq_barre/pages/home_page.dart';
+import 'package:app_six_cinq_barre/pages/login_page.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/date_symbol_data_local.dart';
-import 'dart:async';
-import 'package:app_six_cinq_barre/pages/navigation_wrapper.dart'; // Import du NavigationWrapper
 import 'package:app_six_cinq_barre/gsheet_setup.dart';
 
-Future main() async {
+void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await gSheetInit();
   await initializeDateFormatting('fr_FR', null);
@@ -19,11 +17,9 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return const MaterialApp(
-      debugShowCheckedModeBanner: true,
-      home: NavigationWrapper(
-        initialIndex: 0,
-        child: HomePage(),
-      ),
+      debugShowCheckedModeBanner: false,
+      // home: NavigationWrapper(initialIndex: 0),
+      home : LoginPage(),
     );
   }
 }
