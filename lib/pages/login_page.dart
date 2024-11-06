@@ -179,60 +179,68 @@ class _LoginPageState extends State<LoginPage> {
   bool _isLoading = false;
 
   Future<void> _verifyAndNavigate(BuildContext context) async {
-    if (_isLoading) return;
+  if (_isLoading) return;
 
+  setState(() {
+    _errorMessage = '';
+    _isLoading = true;
+  });
+
+  final email = _emailController.text.trim();
+  if (email.isEmpty) {
     setState(() {
-      _errorMessage = '';
-      _isLoading = true;
+      _errorMessage = 'Veuillez entrer un email';
+      _isLoading = false;
     });
-
-    final email = _emailController.text.trim();
-    if (email.isEmpty) {
-      setState(() {
-        _errorMessage = 'Veuillez entrer un email';
-        _isLoading = false;
-      });
-      return;
-    }
-
-    try {
-      final result = await verifyEmail(email);
-
-      if (result['isValid'] == 'true') {
-        final prefs = await SharedPreferences.getInstance();
-        await prefs.setString(
-            'musicianName', result['musicianName'] ?? 'Musicien');
-        final musicianName = prefs.getString('musicianName') ?? 'Musicien';
-
-        if (mounted) {
-          Navigator.pushAndRemoveUntil(
-            context,
-            MaterialPageRoute(
-              builder: (context) => NavigationWrapper(
-                initialIndex: 0,
-                musicianName: musicianName,
-              ),
-            ),
-            (Route<dynamic> route) => false,
-          );
-        }
-      } else {
-        setState(() {
-          _errorMessage =
-              'Email non reconnu, contactez Fabienne, Coralie ou Sarah';
-        });
-      }
-    } catch (e) {
-      setState(() {
-        _errorMessage = 'Une erreur est survenue. Veuillez réessayer.';
-      });
-      print("Erreur dans _verifyAndNavigate : $e");
-    } finally {
-      setState(() {
-        _isLoading = false;
-      });
-    }
+    return;
   }
+
+  try {
+    // Log pour vérifier que l'email est envoyé correctement
+    print("Vérification de l'email : $email");
+
+    final result = await verifyEmail(email);
+
+    // Log pour vérifier le contenu de la réponse
+    print("Résultat de verifyEmail : $result");
+
+    if (result['isValid'] == 'true') { // Vérifiez aussi s'il s'agit d'un booléen
+      final prefs = await SharedPreferences.getInstance();
+      await prefs.setString(
+          'musicianName', result['musicianName'] ?? 'Musicien');
+      final musicianName = prefs.getString('musicianName') ?? 'Musicien';
+
+      if (mounted) {
+        Navigator.pushAndRemoveUntil(
+          context,
+          MaterialPageRoute(
+            builder: (context) => NavigationWrapper(
+              initialIndex: 0,
+              musicianName: musicianName,
+            ),
+          ),
+          (Route<dynamic> route) => false,
+        );
+      }
+    } else {
+      setState(() {
+        _errorMessage =
+            'Email non reconnu, contactez Fabienne, Coralie ou Sarah';
+      });
+    }
+  } catch (e) {
+    // Capture d'erreur détaillée
+    print("Erreur dans _verifyAndNavigate : $e");
+    setState(() {
+      _errorMessage = 'Une erreur est survenue. Veuillez réessayer.';
+    });
+  } finally {
+    setState(() {
+      _isLoading = false;
+    });
+  }
+}
+
 }
 
 Widget _buildHeader() {
