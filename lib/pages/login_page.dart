@@ -131,8 +131,7 @@ class _LoginPageState extends State<LoginPage> {
             crossAxisAlignment: CrossAxisAlignment.start, // Alignement à gauche
             children: [
               SlideAction(
-                onSubmit: () => _verifyAndNavigate(
-                    context), // Action lorsque le slide est terminé
+                onSubmit: _isLoading ? null : () => _verifyAndNavigate(context),
                 text: "Connexion", // Texte sur le bouton glissable
                 sliderButtonIcon: const Icon(
                   Icons.lock_open_outlined, // Icône du bouton de glissement
@@ -177,36 +176,60 @@ class _LoginPageState extends State<LoginPage> {
   //   );
   // }
 
+  bool _isLoading = false;
+
   Future<void> _verifyAndNavigate(BuildContext context) async {
+    if (_isLoading) return;
+
+    setState(() {
+      _errorMessage = '';
+      _isLoading = true;
+    });
+
     final email = _emailController.text.trim();
     if (email.isEmpty) {
       setState(() {
         _errorMessage = 'Veuillez entrer un email';
+        _isLoading = false;
       });
       return;
     }
 
-    final result = await verifyEmail(email);
-    if (result['isValid'] == 'true') {
-      final prefs = await SharedPreferences.getInstance();
-      await prefs.setString(
-          'musicianName', result['musicianName'] ?? 'Musicien');
-      final musicianName = prefs.getString('musicianName') ?? 'Musicien';
+    try {
+      final result = await verifyEmail(email);
 
-      Navigator.pushAndRemoveUntil(
-        context,
-        MaterialPageRoute(
-          builder: (context) => NavigationWrapper(
-            initialIndex: 0,
-            musicianName: musicianName,
-          ),
-        ),
-        (Route<dynamic> route) => false,
-      );
-    } else {
+      if (result['isValid'] == 'true') {
+        final prefs = await SharedPreferences.getInstance();
+        await prefs.setString(
+            'musicianName', result['musicianName'] ?? 'Musicien');
+        final musicianName = prefs.getString('musicianName') ?? 'Musicien';
+
+        if (mounted) {
+          Navigator.pushAndRemoveUntil(
+            context,
+            MaterialPageRoute(
+              builder: (context) => NavigationWrapper(
+                initialIndex: 0,
+                musicianName: musicianName,
+              ),
+            ),
+            (Route<dynamic> route) => false,
+          );
+        }
+      } else {
+        setState(() {
+          _errorMessage =
+              'Email non reconnu, contactez Fabienne, Coralie ou Sarah';
+        });
+      }
+    } catch (e) {
       setState(() {
-        _errorMessage =
-            'Email non reconnu, contactez Fabienne, Coralie ou Sarah';
+        _errorMessage = 'Une erreur est survenue. Veuillez réessayer.';
+      });
+      print("Erreur dans _verifyAndNavigate : $e");
+    } finally {
+      setState(() {
+        _isLoading = false;
       });
     }
   }
