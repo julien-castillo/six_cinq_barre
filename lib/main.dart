@@ -1,4 +1,5 @@
 import 'package:app_six_cinq_barre/pages/login_page.dart';
+import 'package:app_six_cinq_barre/pages/navigation_wrapper.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/date_symbol_data_local.dart';
 import 'package:app_six_cinq_barre/gsheet_setup.dart';
@@ -8,20 +9,26 @@ void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await gSheetInit();
   await initializeDateFormatting('fr_FR', null);
-  await SharedPreferences.getInstance();
+  final prefs = await SharedPreferences.getInstance();
+  final rememberMe = prefs.getBool('rememberMe') ?? false;
+  final musicianName = prefs.getString('musicianName');
 
-  runApp(const MyApp());
+  runApp(MyApp(rememberMe: rememberMe, musicianName: musicianName));
 }
 
 class MyApp extends StatelessWidget {
-  const MyApp({super.key});
+  final bool rememberMe;
+  final String? musicianName;
+
+  const MyApp({super.key, required this.rememberMe, this.musicianName});
 
   @override
   Widget build(BuildContext context) {
-    return const MaterialApp(
+    return MaterialApp(
       debugShowCheckedModeBanner: false,
-      // home: NavigationWrapper(initialIndex: 0),
-      home : LoginPage(),
+      home: rememberMe && musicianName != null
+          ? NavigationWrapper(initialIndex: 0, musicianName: musicianName!)
+          : const LoginPage(),
     );
   }
 }

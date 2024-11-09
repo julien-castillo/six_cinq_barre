@@ -3,7 +3,7 @@ import 'package:app_six_cinq_barre/pages/navigation_wrapper.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:app_six_cinq_barre/gsheet_setup.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:slide_to_act/slide_to_act.dart'; // Assurez-vous d'importer ce fichier
+import 'package:slide_to_act/slide_to_act.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({Key? key}) : super(key: key);
@@ -15,6 +15,21 @@ class LoginPage extends StatefulWidget {
 class _LoginPageState extends State<LoginPage> {
   final TextEditingController _emailController = TextEditingController();
   String _errorMessage = '';
+  bool _rememberMe = false;
+  bool _isLoading = false;
+  bool _isConnected = false;
+  bool _isConnectionFailed = false;
+
+  @override
+  void initState() {
+    super.initState();
+  }
+
+  void _toggleRememberMe(bool? value) {
+  setState(() {
+    _rememberMe = value ?? false;
+  });
+}
 
   @override
   Widget build(BuildContext context) {
@@ -39,10 +54,12 @@ class _LoginPageState extends State<LoginPage> {
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   _buildHeader(),
-                  const SizedBox(height: 50),
+                  const SizedBox(height: 10),
                   _buildLoginIcon(),
-                  const SizedBox(height: 50),
+                  const SizedBox(height: 20),
                   _buildEmailField(),
+                  const SizedBox(height: 20),
+                  _buildCheckbox(),
                   const SizedBox(height: 20),
                   _buildLoginButton(context),
                   if (_errorMessage.isNotEmpty)
@@ -83,28 +100,24 @@ class _LoginPageState extends State<LoginPage> {
     );
   }
 
-  // Widget _buildLoginButton(BuildContext context) {
-  //   return SlideAction(
-  //     onSubmit: () =>
-  //         _verifyAndNavigate(context), // Action lorsque le slide est terminé
-  //     text: "Connexion", // Texte sur le bouton glissable
-  //     sliderButtonIcon: const Icon(
-  //       Icons.lock_open_outlined, // Icône du bouton de glissement
-  //       color: Colors.white,
-  //     ),
-  //     sliderRotate: false,
-  //     sliderButtonIconPadding: 14,
-  //     innerColor: Colors.red, // Couleur intérieure du slider
-  //     outerColor:
-  //         Colors.cyan.withOpacity(0.2), // Couleur extérieure lors du glissement
-  //     textStyle: const TextStyle(
-  //       color: Colors.white, // Couleur du texte dans le slider
-  //       fontSize: 18, // Taille du texte
-  //       fontWeight: FontWeight.w500,
-  //     ),
-  //     borderRadius: 12, // Arrondi des bords
-  //   );
-  // }
+  Widget _buildCheckbox() {
+  return Theme(
+    data: Theme.of(context).copyWith(
+      unselectedWidgetColor: Colors.cyan,
+    ),
+    child: CheckboxListTile(
+      title: const Text(
+        'Me connecter automatiquement lors de ma prochaine visite',
+        style: TextStyle(color: Colors.cyan),
+      ),
+      value: _rememberMe,
+      onChanged: _toggleRememberMe,
+      controlAffinity: ListTileControlAffinity.leading,
+      activeColor: Colors.cyan,
+      checkColor: Colors.white,
+    ),
+  );
+}
 
   Widget _buildLoginButton(BuildContext context) {
     return Column(
@@ -112,12 +125,12 @@ class _LoginPageState extends State<LoginPage> {
       children: [
         Container(
           decoration: BoxDecoration(
-            color: Colors.cyan.withOpacity(0.2), // Couleur de fond extérieure
+            color: Colors.cyan.withOpacity(0.2),
             borderRadius: BorderRadius.circular(12),
             border: Border.all(
               color: Colors.cyan,
               width: 1,
-            ), // Couleur de la bordure
+            ),
             boxShadow: [
               BoxShadow(
                 color: Colors.black.withOpacity(0.2),
@@ -126,28 +139,27 @@ class _LoginPageState extends State<LoginPage> {
               ),
             ],
           ),
-          padding: const EdgeInsets.all(0), // Espacement interne
+          padding: const EdgeInsets.all(0),
           child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start, // Alignement à gauche
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               SlideAction(
                 onSubmit: _isLoading ? null : () => _verifyAndNavigate(context),
-                text: "Connexion", // Texte sur le bouton glissable
+                text: "Connexion",
                 sliderButtonIcon: const Icon(
-                  Icons.lock_open_outlined, // Icône du bouton de glissement
+                  Icons.lock_open_outlined,
                   color: Colors.white,
                 ),
                 sliderRotate: false,
                 sliderButtonIconPadding: 14,
-                innerColor: Colors.cyan, // Couleur intérieure du slider
-                outerColor: Colors.cyan
-                    .withOpacity(0.2), // Couleur extérieure lors du glissement
+                innerColor: Colors.cyan,
+                outerColor: Colors.cyan.withOpacity(0.2),
                 textStyle: const TextStyle(
-                  color: Colors.white, // Couleur du texte dans le slider
-                  fontSize: 18, // Taille du texte
+                  color: Colors.white,
+                  fontSize: 18,
                   fontWeight: FontWeight.w500,
                 ),
-                borderRadius: 12, // Arrondi des bords
+                borderRadius: 12,
               ),
             ],
           ),
@@ -156,132 +168,131 @@ class _LoginPageState extends State<LoginPage> {
     );
   }
 
-  // Widget _buildLoginButton(BuildContext context) {
-  //   return ElevatedButton(
-  //     onPressed: () => _verifyAndNavigate(context),
-  //     child: const SizedBox(
-  //       width: double.infinity,
-  //       child: Text(
-  //         "Connexion",
-  //         textAlign: TextAlign.center,
-  //         style: TextStyle(fontSize: 20),
-  //       ),
-  //     ),
-  //     style: ElevatedButton.styleFrom(
-  //       foregroundColor: Colors.black,
-  //       backgroundColor: Colors.cyan,
-  //       shape: const StadiumBorder(),
-  //       padding: const EdgeInsets.symmetric(vertical: 16),
-  //     ),
-  //   );
-  // }
-
-  bool _isLoading = false;
-
   Future<void> _verifyAndNavigate(BuildContext context) async {
-  if (_isLoading) return;
-
-  setState(() {
-    _errorMessage = '';
-    _isLoading = true;
-  });
-
-  final email = _emailController.text.trim();
-  if (email.isEmpty) {
+    if (_isLoading) return;
     setState(() {
-      _errorMessage = 'Veuillez entrer un email';
-      _isLoading = false;
+      _errorMessage = '';
+      _isLoading = true;
+      _isConnected = false;
+      _isConnectionFailed = false;
     });
-    return;
-  }
 
-  try {
-    // Log pour vérifier que l'email est envoyé correctement
-    print("Vérification de l'email : $email");
-
-    final result = await verifyEmail(email);
-
-    // Log pour vérifier le contenu de la réponse
-    print("Résultat de verifyEmail : $result");
-
-    if (result['isValid'] == 'true') { // Vérifiez aussi s'il s'agit d'un booléen
-      final prefs = await SharedPreferences.getInstance();
-      await prefs.setString(
-          'musicianName', result['musicianName'] ?? 'Musicien');
-      final musicianName = prefs.getString('musicianName') ?? 'Musicien';
-
-      if (mounted) {
-        Navigator.pushAndRemoveUntil(
-          context,
-          MaterialPageRoute(
-            builder: (context) => NavigationWrapper(
-              initialIndex: 0,
-              musicianName: musicianName,
-            ),
-          ),
-          (Route<dynamic> route) => false,
-        );
-      }
-    } else {
+    final email = _emailController.text.trim();
+    if (email.isEmpty) {
       setState(() {
-        _errorMessage =
-            'Email non reconnu, contactez Fabienne, Coralie ou Sarah';
+        _errorMessage = 'Veuillez entrer un email';
+        _isLoading = false;
+        _isConnectionFailed = true;
+      });
+      return;
+    }
+
+    try {
+      print("Vérification de l'email : $email");
+      final result = await verifyEmail(email);
+      print("Résultat de verifyEmail : $result");
+
+      if (result['isValid'] == 'true') {
+        setState(() {
+          _isConnected = true;
+          _isConnectionFailed = false;
+        });
+
+        final prefs = await SharedPreferences.getInstance();
+        await prefs.setString('musicianName', result['musicianName'] ?? 'Musicien');
+        await prefs.setBool('rememberMe', _rememberMe);
+        await prefs.setBool('isAdmin', result['isAdmin'] ?? false);
+        final musicianName = prefs.getString('musicianName') ?? 'Musicien';
+
+        // Attendre un court instant pour montrer l'icône de succès
+        await Future.delayed(const Duration(milliseconds: 500));
+
+        if (mounted) {
+          Navigator.pushAndRemoveUntil(
+            context,
+            MaterialPageRoute(
+              builder: (context) => NavigationWrapper(
+                initialIndex: 0,
+                musicianName: musicianName,
+              ),
+            ),
+            (Route<dynamic> route) => false,
+          );
+        }
+      } else {
+        setState(() {
+          _errorMessage =
+              'Email non reconnu, contactez Fabienne, Coralie ou Sarah';
+          _isConnectionFailed = true;
+        });
+      }
+    } catch (e) {
+      print("Erreur dans _verifyAndNavigate : $e");
+      setState(() {
+        _errorMessage = 'Une erreur est survenue. Veuillez réessayer.';
+        _isConnectionFailed = true;
+      });
+    } finally {
+      setState(() {
+        _isLoading = false;
       });
     }
-  } catch (e) {
-    // Capture d'erreur détaillée
-    print("Erreur dans _verifyAndNavigate : $e");
-    setState(() {
-      _errorMessage = 'Une erreur est survenue. Veuillez réessayer.';
-    });
-  } finally {
-    setState(() {
-      _isLoading = false;
-    });
   }
-}
 
-}
-
-Widget _buildHeader() {
-  return Column(
-    children: [
-      Row(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          const Text(
-            "Orchestre",
-            style: TextStyle(
-              fontSize: 30,
-              fontFamily: 'Poppins',
-              color: Colors.cyan,
+  Widget _buildHeader() {
+    return Column(
+      children: [
+        Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            const Text(
+              "Orchestre",
+              style: TextStyle(
+                fontSize: 30,
+                fontFamily: 'Poppins',
+                color: Colors.cyan,
+              ),
             ),
-          ),
-          const SizedBox(width: 10),
-          SvgPicture.asset(
-            "assets/images/65barre.svg",
-            colorFilter: const ColorFilter.mode(Colors.cyan, BlendMode.srcIn),
-            height: 75,
-          ),
-        ],
-      ),
-      const SizedBox(height: 20),
-      const Text(
-        "Dirigé par Guillemette Daboval",
-        style: TextStyle(fontSize: 20, color: Colors.cyan),
-        textAlign: TextAlign.center,
-      ),
-    ],
-  );
-}
+            const SizedBox(width: 10),
+            SvgPicture.asset(
+              "assets/images/65barre.svg",
+              colorFilter: const ColorFilter.mode(Colors.cyan, BlendMode.srcIn),
+              height: 75,
+            ),
+          ],
+        ),
+        const SizedBox(height: 20),
+        const Text(
+          "Dirigé par Guillemette Daboval",
+          style: TextStyle(fontSize: 20, color: Colors.cyan),
+          textAlign: TextAlign.center,
+        ),
+      ],
+    );
+  }
 
-Widget _buildLoginIcon() {
-  return Container(
-    decoration: BoxDecoration(
-      border: Border.all(color: Colors.cyan, width: 2),
-      shape: BoxShape.circle,
-    ),
-    padding: const EdgeInsets.all(20),
-    child: const Icon(Icons.lock_outline, color: Colors.cyan, size: 80),
-  );
+  Widget _buildLoginIcon() {
+    Color iconColor;
+    IconData iconData;
+
+    if (_isConnected) {
+      iconColor = Colors.green;
+      iconData = Icons.check;
+    } else if (_isConnectionFailed) {
+      iconColor = Colors.red;
+      iconData = Icons.lock_outline;
+    } else {
+      iconColor = Colors.cyan;
+      iconData = Icons.lock_outline;
+    }
+
+    return Container(
+      decoration: BoxDecoration(
+        border: Border.all(color: iconColor, width: 2),
+        shape: BoxShape.circle,
+      ),
+      padding: const EdgeInsets.all(20),
+      child: Icon(iconData, color: iconColor, size: 80),
+    );
+  }
 }

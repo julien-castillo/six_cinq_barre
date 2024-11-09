@@ -251,22 +251,17 @@ class _MusiciansPageState extends State<MusiciansPage> {
                       ),
                       const SizedBox.shrink(),
                       Align(
-                  alignment: Alignment.topRight,
-                  child:
-                      _buildGlassmorphicButton(context, Icons.home, 'Accueil'),
-                ),
+                        alignment: Alignment.topRight,
+                        child: _buildGlassmorphicButton(
+                            context, Icons.home, 'Accueil'),
+                      ),
                     ],
                   ),
-                  
                 ),
-                
               ],
             ),
-            
           ),
-          
         ),
-        
       ),
     );
   }

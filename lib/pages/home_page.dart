@@ -1,4 +1,5 @@
 import 'package:app_six_cinq_barre/pages/absences_page.dart';
+import 'package:app_six_cinq_barre/pages/admin_page.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:app_six_cinq_barre/pages/contribution_page.dart';
@@ -6,6 +7,7 @@ import 'package:app_six_cinq_barre/pages/musicians_page.dart';
 import 'package:app_six_cinq_barre/pages/program_page.dart';
 import 'package:app_six_cinq_barre/pages/resources_page.dart';
 import 'package:app_six_cinq_barre/gsheet_setup.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class HomePage extends StatefulWidget {
   final String musicianName;
@@ -18,12 +20,21 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends State<HomePage> {
   List dataFromSheet = [];
   bool isLoading = true;
+  bool isAdmin = false;
   String errorMessage = '';
 
   @override
   void initState() {
     super.initState();
+    _checkAdminStatus();
     loadData();
+  }
+
+  Future<void> _checkAdminStatus() async {
+    final prefs = await SharedPreferences.getInstance();
+    setState(() {
+      isAdmin = prefs.getBool('isAdmin') ?? false;
+    });
   }
 
   Future<void> loadData() async {
@@ -68,11 +79,6 @@ class _HomePageState extends State<HomePage> {
     }
     throw Exception('Échec après $maxRetries tentatives');
   }
-
-  // Future<void> readDataInformationsFromSheet() async {
-  //   dataFromSheet = (await gsheetInformationsDetails!.values.map.allRows())!;
-  //   setState(() {});
-  // }
 
   @override
   Widget build(BuildContext context) {
@@ -131,11 +137,6 @@ class _HomePageState extends State<HomePage> {
         child: SingleChildScrollView(
           child: Column(
             children: [
-              // Text(
-              //   "Bienvenue ${widget.musicianName}",
-              //   style: const TextStyle(fontSize: 18, color: Colors.orange),
-              //   textAlign: TextAlign.center,
-              // ),
               const SizedBox(height: 10),
               _buildHeader(),
               const SizedBox(height: 10),
@@ -147,19 +148,22 @@ class _HomePageState extends State<HomePage> {
               const SizedBox(height: 20),
               _buildGridView(),
               const SizedBox(height: 20),
-              _buildGlassmorphicCardAbsences(
+              _buildGlassmorphicCardAbsencesAndAdmin(
                 context,
                 'Absences',
-                // Icons.picture_as_pdf,
+                isAdmin: isAdmin,
+                adminPage: isAdmin ? AdminPage() : null,
                 Colors.transparent,
                 const Color(0xFF048B9A),
-                AbsencesPage(musicianName: widget.musicianName,),
-                const BorderRadius.only(
-                  // topRight: Radius.circular(30),
-                  bottomRight: Radius.circular(30),
-                  // topLeft: Radius.circular(30),
-                  bottomLeft: Radius.circular(30),
+                AbsencesPage(
+                  musicianName: widget.musicianName,
                 ),
+                const BorderRadius.only(
+                    // topRight: Radius.circular(30),
+                    // bottomRight: Radius.circular(30),
+                    // topLeft: Radius.circular(30),
+                    // bottomLeft: Radius.circular(30),
+                    ),
               ),
               const SizedBox(height: 10),
             ],
@@ -202,7 +206,7 @@ class _HomePageState extends State<HomePage> {
 
   Widget _buildGridView() {
     return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 40.0),
+      padding: const EdgeInsets.symmetric(horizontal: 60.0),
       child: GridView.count(
         crossAxisCount: 2,
         mainAxisSpacing: 15.0,
@@ -358,28 +362,35 @@ class _HomePageState extends State<HomePage> {
     );
   }
 
-  Widget _buildGlassmorphicCardAbsences(
-    BuildContext context,
-    String title,
-    // IconData icon,
-    Color backgroundColor,
-    Color overlayColor,
-    Widget page,
-    BorderRadius borderRadius,
-  ) {
-    return GestureDetector(
-      onTap: () {
-        Navigator.push(
-          context,
-          MaterialPageRoute(builder: (context) => page),
-        );
-      },
-      child: SizedBox(
-        width: 180,
-        height: 60,
+  Widget _buildGlassmorphicCardAbsencesAndAdmin(
+      BuildContext context,
+      String title,
+      Color backgroundColor,
+      Color overlayColor,
+      Widget page,
+      BorderRadius borderRadius,
+      {bool isAdmin = false, // Ajoutez ce paramètre
+      Widget? adminPage} // Ajoutez ce paramètre pour la page admin
+      ) {
+    Widget buildButtonAbsences(String buttonTitle, Widget targetPage) {
+      return GestureDetector(
+        onTap: () {
+          Navigator.push(
+            context,
+            MaterialPageRoute(builder: (context) => targetPage),
+          );
+        },
         child: Container(
+          width: 150,
+          height: 50,
           decoration: BoxDecoration(
-            borderRadius: borderRadius,
+            borderRadius: isAdmin
+                ? const BorderRadius.only(
+                    topLeft: Radius.circular(30),
+                    bottomLeft: Radius.circular(30),
+                  )
+                : BorderRadius.circular(
+                    30), // Si non-admin, tous les coins arrondis
             color: overlayColor.withOpacity(0.2),
             border: Border.all(color: Colors.cyan.withOpacity(0.5), width: 1.5),
             boxShadow: [
@@ -391,20 +402,64 @@ class _HomePageState extends State<HomePage> {
             ],
           ),
           child: Center(
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                // Icon(icon, size: 50, color: Colors.cyan),
-                const SizedBox(height: 5),
-                Text(
-                  title,
-                  style: const TextStyle(fontSize: 20, color: Colors.cyan),
-                ),
-              ],
+            child: Text(
+              buttonTitle,
+              style: const TextStyle(fontSize: 20, color: Colors.cyan),
             ),
           ),
         ),
-      ),
-    );
+      );
+    }
+
+    ;
+    Widget buildButtonAdmin(String buttonTitle, Widget targetPage) {
+      return GestureDetector(
+        onTap: () {
+          Navigator.push(
+            context,
+            MaterialPageRoute(builder: (context) => targetPage),
+          );
+        },
+        child: Container(
+          width: 150,
+          height: 50,
+          decoration: BoxDecoration(
+            borderRadius: const BorderRadius.only(
+              topRight: Radius.circular(30),
+              bottomRight: Radius.circular(30),
+            ),
+            color: overlayColor.withOpacity(0.2),
+            border:
+                Border.all(color: Colors.orange.withOpacity(0.5), width: 1.5),
+            boxShadow: [
+              BoxShadow(
+                color: Colors.black.withOpacity(0.2),
+                blurRadius: 10.0,
+                spreadRadius: 2.0,
+              ),
+            ],
+          ),
+          child: Center(
+            child: Text(
+              buttonTitle,
+              style: const TextStyle(fontSize: 20, color: Colors.orange),
+            ),
+          ),
+        ),
+      );
+    }
+
+    if (isAdmin && adminPage != null) {
+      return Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          buildButtonAbsences(title, page),
+          const SizedBox(width: 20), // Espace entre les boutons
+          buildButtonAdmin("Admin", adminPage),
+        ],
+      );
+    } else {
+      return Center(child: buildButtonAbsences(title, page));
+    }
   }
 }

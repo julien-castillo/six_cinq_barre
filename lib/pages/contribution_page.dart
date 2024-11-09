@@ -110,30 +110,12 @@ class _ContributionPageState extends State<ContributionPage> {
                     ),
                   ),
                 ),
-      // floatingActionButton: GestureDetector(
-      //   onTap: () async {
-      //     final prefs = await SharedPreferences.getInstance();
-      //     final musicianName = prefs.getString('musicianName') ?? 'Musicien';
-      //     Navigator.pushAndRemoveUntil(
-      //       context,
-      //       MaterialPageRoute(
-      //         builder: (context) => NavigationWrapper(
-      //           initialIndex: 0,
-      //           musicianName: musicianName,
-      //         ),
-      //       ),
-      //       (Route<dynamic> route) => false,
-      //     );
-      //   },
-      //   child: _buildGlassmorphicButton(context, Icons.home, 'Accueil'),
-      // ),
     );
   }
 
   Widget _buildSlideToActButton(BuildContext context) {
     return Container(
       width: 300,
-      // padding: const EdgeInsets.all(0),
       decoration: BoxDecoration(
         border: Border.all(color: Colors.cyan, width: 1),
         borderRadius: BorderRadius.circular(20),
@@ -226,7 +208,9 @@ class _ContributionPageState extends State<ContributionPage> {
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(20),
         color: Colors.cyan.withOpacity(0.2),
-        border: Border.all(color: Colors.cyan.withOpacity(0.5), width: 1.5),
+        border: cotisationPayee
+        ? Border.all(color: Colors.green.withOpacity(0.5), width: 2.5)
+        : Border.all(color: Colors.red.withOpacity(0.5), width: 2.5),
         boxShadow: [
           BoxShadow(
             color: Colors.black.withOpacity(0.2),
@@ -236,38 +220,33 @@ class _ContributionPageState extends State<ContributionPage> {
         ],
       ),
       child: Column(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          Text(
-            "- $musicianName - ",
-            style: const TextStyle(fontSize: 20, color: Colors.cyan),
-          ),
-          const SizedBox(height: 10),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Icon(
-                cotisationPayee ? Icons.check_circle : Icons.warning,
-                color: cotisationPayee ? Colors.green : Colors.orange,
-                size: 24,
-              ),
-              SizedBox(width: 8),
-              Flexible(
-                child: Text(
-                  cotisationPayee
-                      ? "Ta cotisation est réglée pour cette saison, merci !"
-                      : "N'oublie pas de régler ta cotisation !",
-                  style: TextStyle(
-                    fontSize: 18,
-                    color: cotisationPayee ? Colors.green : Colors.orange,
-                  ),
-                  textAlign: TextAlign.center,
-                ),
-              ),
-            ],
-          ),
-        ],
+  mainAxisSize: MainAxisSize.min,
+  children: [
+    Text(
+      "- $musicianName - ",
+      style: const TextStyle(fontSize: 20, color: Colors.cyan),
+    ),
+    const SizedBox(height: 10),
+    Icon(
+      cotisationPayee ? Icons.check_circle : Icons.warning,
+      color: cotisationPayee ? Colors.green : Colors.red,
+      size: 24,
+    ),
+    const SizedBox(height: 8),
+    Flexible(
+      child: Text(
+        cotisationPayee
+            ? "Ta cotisation est réglée pour cette saison, merci !"
+            : "N'oublie pas de régler ta cotisation !",
+        style: TextStyle(
+          fontSize: 18,
+          color: cotisationPayee ? Colors.green : Colors.red,
+        ),
+        textAlign: TextAlign.center,
       ),
+    ),
+  ],
+),
     );
   }
 
