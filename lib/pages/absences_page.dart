@@ -5,7 +5,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:slide_to_act/slide_to_act.dart';
 
 class AbsencesPage extends StatefulWidget {
-  final String musicianName; // Le nom du musicien connecté
+  final String musicianName;
 
   const AbsencesPage({Key? key, required this.musicianName}) : super(key: key);
 
@@ -14,7 +14,8 @@ class AbsencesPage extends StatefulWidget {
 }
 
 class _AbsencesPageState extends State<AbsencesPage> {
-  List<Map<String, dynamic>> rehearsalData = []; // Données des répétitions
+  List<Map<String, dynamic>> rehearsalData = [];
+  bool _isLoading = false;
 
   @override
   void initState() {
@@ -22,53 +23,45 @@ class _AbsencesPageState extends State<AbsencesPage> {
     fetchRehearsalData();
   }
 
-  // Fonction pour récupérer les données d'absences depuis Google Sheets
   Future<void> fetchRehearsalData() async {
-    final sheet = await gsheetAbsencesDetails; // Accède à la feuille 'absences'
+    final sheet = await gsheetAbsencesDetails;
     if (sheet == null) return;
 
-    final rows = await sheet.values.allRows(); // Récupère toutes les lignes
-    final headers = rows.first; // Première ligne : les dates
+    final rows = await sheet.values.allRows();
+    final headers = rows.first.sublist(2);
 
-    // Parcourt chaque ligne pour créer une map pour chaque répétition
     setState(() {
       rehearsalData = rows
           .sublist(1)
           .map((row) {
-            final musician = row[0]; // Colonne avec le nom du musicien
-            if (musician != widget.musicianName)
-              return null; // Filtre pour le musicien connecté
+            final musician = row[0];
+            if (musician != widget.musicianName) return null;
 
-            // Crée un map avec la date et l'état de l'absence pour chaque répétition
             final data = <String, dynamic>{'musician': musician};
-            for (var i = 1; i < headers.length; i++) {
-              data[headers[i]] = row[i] == 'true'; // Convertit en booléen
+            for (var i = 2; i < row.length; i++) {
+              data[headers[i - 2]] = row[i] == 'true';
             }
             return data;
           })
-          .where((element) => element != null) // Filtre les éléments nulls
+          .where((element) => element != null)
           .cast<Map<String, dynamic>>()
           .toList();
     });
   }
 
-  // Fonction pour mettre à jour l'état d'absence dans Google Sheets
   Future<void> updateAbsenceStatus(String date, bool isAbsent) async {
     final sheet = await gsheetAbsencesDetails;
     if (sheet == null) return;
 
     final rows = await sheet.values.allRows();
     final headers = rows.first;
-    final dateIndex =
-        headers.indexOf(date); // Trouve l'index de la colonne de la date
+    final dateIndex = headers.indexOf(date);
     if (dateIndex == -1) return;
 
-    // Trouve l'index de la ligne correspondant au musicien
     final musicianRowIndex =
         rows.indexWhere((row) => row[0] == widget.musicianName);
     if (musicianRowIndex == -1) return;
 
-    // Met à jour la cellule avec la nouvelle valeur d'absence
     await sheet.values.insertValue(
       isAbsent.toString(),
       column: dateIndex + 1,
@@ -84,7 +77,7 @@ class _AbsencesPageState extends State<AbsencesPage> {
         centerTitle: true,
         backgroundColor: Colors.cyan,
       ),
-      backgroundColor: Colors.black, // Définition de l'arrière-plan en noir
+      backgroundColor: Colors.black,
       body: rehearsalData.isEmpty
           ? const Center(
               child: CircularProgressIndicator(
@@ -95,19 +88,15 @@ class _AbsencesPageState extends State<AbsencesPage> {
               itemCount: rehearsalData.length + 1,
               itemBuilder: (context, index) {
                 if (index == rehearsalData.length) {
-                        // Affiche le bouton "Accueil" après le dernier élément
-                        return Column(
-                          crossAxisAlignment: CrossAxisAlignment.end,
-                          children: [
-                            const SizedBox(height: 10),
-                            _buildGlassmorphicButton(
-                                context, Icons.home, 'Accueil'),
-                          ],
-                        );
-                      }
+                  return Column(
+                    crossAxisAlignment: CrossAxisAlignment.end,
+                    children: [
+                      const SizedBox(height: 10),
+                      _buildGlassmorphicButton(context, Icons.home, 'Accueil'),
+                    ],
+                  );
+                }
                 final rehearsal = rehearsalData[index];
-
-                // Exclut la première clé "musician" pour ne garder que les dates
                 final dates = rehearsal.keys.where((key) => key != 'musician');
 
                 return Column(
@@ -116,17 +105,12 @@ class _AbsencesPageState extends State<AbsencesPage> {
                     for (final date in dates) ...[
                       Container(
                         decoration: BoxDecoration(
-                          color: Colors.cyan
-                              .withOpacity(0.2), // Couleur de fond extérieure
-                          borderRadius:
-                              BorderRadius.circular(12), // Arrondi des bords
+                          color: Colors.cyan.withOpacity(0.2),
+                          borderRadius: BorderRadius.circular(12),
                           border: Border.all(
-                            color: rehearsal[date]
-                                ? Colors.red
-                                : Colors
-                                    .green, // Vert si présent, rouge si absent
+                            color: rehearsal[date] ? Colors.red : Colors.green,
                             width: 1,
-                          ), // Couleur de la bordure
+                          ),
                           boxShadow: [
                             BoxShadow(
                               color: Colors.black.withOpacity(0.2),
@@ -135,20 +119,17 @@ class _AbsencesPageState extends State<AbsencesPage> {
                             ),
                           ],
                         ),
-                        padding: const EdgeInsets.all(10), // Espacement interne
+                        padding: const EdgeInsets.all(10),
                         child: Column(
-                          crossAxisAlignment:
-                              CrossAxisAlignment.start, // Alignement à gauche
+                          crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             Text(
                               "Répétition du $date",
                               style: TextStyle(
                                 fontSize: 18,
                                 fontWeight: FontWeight.bold,
-                                color: rehearsal[date]
-                                    ? Colors.red
-                                    : Colors
-                                        .green, // Vert si présent, rouge si absent
+                                color:
+                                    rehearsal[date] ? Colors.red : Colors.green,
                               ),
                             ),
                             const SizedBox(height: 10),
@@ -157,31 +138,36 @@ class _AbsencesPageState extends State<AbsencesPage> {
                                   ? 'Annuler mon absence'
                                   : 'Déclarer mon absence',
                               sliderButtonIcon: Icon(
-                                rehearsal[date]
-                                    ? Icons.cancel
-                                    : Icons.check_circle,
+                                _isLoading
+                                    ? Icons.hourglass_top
+                                    : (rehearsal[date]
+                                        ? Icons.cancel
+                                        : Icons.check_circle),
                                 color: Colors.white,
                               ),
                               sliderRotate: false,
                               sliderButtonIconPadding: 14,
-                              innerColor: rehearsal[date]
-                                  ? Colors.red
-                                  : Colors.green, // Couleur de fond intérieure
-                              outerColor: Colors.cyan.withOpacity(
-                                  0.2), // Couleur de fond extérieure lorsqu'on glisse
+                              innerColor:
+                                  rehearsal[date] ? Colors.red : Colors.green,
+                              outerColor: Colors.cyan.withOpacity(0.2),
                               textStyle: const TextStyle(
-                                color: Colors
-                                    .white, // Couleur du texte dans le slider
-                                fontSize: 18, // Taille du texte
+                                color: Colors.white,
+                                fontSize: 18,
                                 fontWeight: FontWeight.w500,
                               ),
-                              borderRadius: 12, // Arrondi des bords
+                              borderRadius: 12,
                               onSubmit: () async {
+                                setState(() {
+                                  _isLoading = true;
+                                });
+
                                 final newStatus = !rehearsal[date];
                                 await updateAbsenceStatus(date, newStatus);
-
-                                // Recharger les données pour afficher l'état actuel
                                 await fetchRehearsalData();
+
+                                setState(() {
+                                  _isLoading = false;
+                                });
                               },
                             ),
                           ],
