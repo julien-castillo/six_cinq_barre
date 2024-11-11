@@ -35,46 +35,45 @@ class _ProgramPageState extends State<ProgramPage> {
   }
 
   @override
-Widget build(BuildContext context) {
-  return Scaffold(
-    appBar: AppBar(
-      centerTitle: true,
-      backgroundColor: Colors.cyan,
-      title: const Text('Programme'),
-    ),
-    backgroundColor: Colors.black,
-    body: dataFromSheet.isEmpty
-        ? const Center(child: CircularProgressIndicator(color: Colors.cyan))
-        : ListView.builder(
-            padding: const EdgeInsets.all(16.0),
-            itemCount: dataFromSheet.length + 1, // Augmente itemCount de 1
-            itemBuilder: (context, index) {
-              if (index == dataFromSheet.length) {
-                // Affiche le bouton "Accueil" après le dernier élément
-                return Column(
-                  crossAxisAlignment: CrossAxisAlignment.end,
-                  children: [
-                    const SizedBox(height: 10),
-                    _buildGlassmorphicButton(context, Icons.home, 'Accueil'),
-                  ],
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        centerTitle: true,
+        backgroundColor: Colors.cyan,
+        title: const Text('Programme'),
+      ),
+      backgroundColor: Colors.black,
+      body: dataFromSheet.isEmpty
+          ? const Center(child: CircularProgressIndicator(color: Colors.cyan))
+          : ListView.builder(
+              padding: const EdgeInsets.all(16.0),
+              itemCount: dataFromSheet.length + 1, // Augmente itemCount de 1
+              itemBuilder: (context, index) {
+                if (index == dataFromSheet.length) {
+                  // Affiche le bouton "Accueil" après le dernier élément
+                  return Column(
+                    crossAxisAlignment: CrossAxisAlignment.end,
+                    children: [
+                      const SizedBox(height: 10),
+                      _buildGlassmorphicButton(context, Icons.home, 'Accueil'),
+                    ],
+                  );
+                }
+                final row = dataFromSheet[index];
+                return Padding(
+                  padding: const EdgeInsets.symmetric(vertical: 10.0),
+                  child: _buildGlassmorphicRectangleProgram(
+                    context,
+                    Icons.theater_comedy,
+                    row['title'] ?? "",
+                    row['subtitle'] ?? "",
+                    row['text'] ?? "",
+                  ),
                 );
-              }
-              final row = dataFromSheet[index];
-              return Padding(
-                padding: const EdgeInsets.symmetric(vertical: 10.0),
-                child: _buildGlassmorphicRectangleProgram(
-                  context,
-                  Icons.theater_comedy,
-                  row['title'] ?? "",
-                  row['subtitle'] ?? "",
-                  row['text'] ?? "",
-                ),
-              );
-            },
-          ),
-  );
-}
-
+              },
+            ),
+    );
+  }
 
   Widget _buildGlassmorphicRectangleProgram(BuildContext context, IconData icon,
       String title, String subtitle, String text) {

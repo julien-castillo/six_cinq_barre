@@ -1,4 +1,5 @@
 import 'package:app_six_cinq_barre/gsheet_setup.dart';
+import 'package:app_six_cinq_barre/pages/admin_page.dart';
 import 'package:app_six_cinq_barre/pages/navigation_wrapper.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -55,36 +56,53 @@ class _AdminContributionPageState extends State<AdminContributionPage> {
       ),
       backgroundColor: Colors.black,
       body: isLoading
-          ? const Center(child: CircularProgressIndicator())
+          ? const Center(child: CircularProgressIndicator(color: Colors.cyan))
           : SingleChildScrollView(
               child: Padding(
                 padding: const EdgeInsets.all(16.0),
                 child: Column(
                   children: [
                     _buildGlassmorphicAdminHeader(context),
-                    const SizedBox(height: 20),
+                    const SizedBox(height: 100),
                     _buildGlassmorphicList(
                       context,
                       "Cotisations payées (${contributionLists['paid']!.length})",
                       contributionLists['paid']!,
-                      Colors.green, // Couleur de l'icône et de la bordure verte
-                      Colors.green.withOpacity(0.5), // Bordure verte
+                      Colors.green,
+                      Colors.green.withOpacity(0.5),
                     ),
                     const SizedBox(height: 20),
                     _buildGlassmorphicList(
                       context,
                       "Cotisations non payées (${contributionLists['unpaid']!.length})",
                       contributionLists['unpaid']!,
-                      Colors.red, // Couleur de l'icône et de la bordure rouge
-                      Colors.red.withOpacity(0.5), // Bordure rouge
+                      Colors.red,
+                      Colors.red.withOpacity(0.5),
                     ),
                     const SizedBox(height: 50),
                     _buildSlideToActButton(),
                     const SizedBox(height: 20),
-                    Align(
-                      alignment: Alignment.centerRight,
-                      child: _buildGlassmorphicButton(
-                          context, Icons.home, 'Accueil'),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.end,
+                      children: [
+                        GestureDetector(
+                          onTap: () {
+                            Navigator.pushReplacement(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => AdminPage()),
+                            );
+                          },
+                          child: _buildGlassmorphicButtonArrow(
+                            context,
+                            Icons.arrow_back,
+                            'Retour',
+                          ),
+                        ),
+                        const SizedBox(width: 10), // Espace entre les boutons
+                        _buildGlassmorphicButton(
+                            context, Icons.home, 'Accueil'),
+                      ],
                     ),
                   ],
                 ),
@@ -112,7 +130,7 @@ class _AdminContributionPageState extends State<AdminContributionPage> {
       ),
       padding: const EdgeInsets.all(10),
       child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
+        crossAxisAlignment: CrossAxisAlignment.center,
         children: [
           Text(
             "Copier les e-mails des retardataires...",
@@ -175,8 +193,7 @@ class _AdminContributionPageState extends State<AdminContributionPage> {
             decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(20),
               color: Colors.cyan.withOpacity(0.2),
-              border:
-                  Border.all(color: borderColor, width: 2),
+              border: Border.all(color: borderColor, width: 3),
               boxShadow: [
                 BoxShadow(
                   color: Colors.black.withOpacity(0.2),
@@ -219,8 +236,7 @@ class _AdminContributionPageState extends State<AdminContributionPage> {
                                     const SizedBox(width: 8),
                                     Expanded(
                                       child: Text(
-                                        musician['name'] ??
-                                            '', // Utilisez 'name' au lieu de l'ensemble de la chaîne
+                                        musician['name'] ?? '',
                                         style: const TextStyle(
                                             fontSize: 18, color: Colors.white),
                                       ),
@@ -315,6 +331,33 @@ class _AdminContributionPageState extends State<AdminContributionPage> {
         child: Center(
           child: Icon(icon, size: 30, color: Colors.cyan),
         ),
+      ),
+    );
+  }
+
+  Widget _buildGlassmorphicButtonArrow(
+      BuildContext context, IconData icon, String title) {
+    return Container(
+      width: 60,
+      height: 60,
+      decoration: BoxDecoration(
+        borderRadius: const BorderRadius.only(
+          topLeft: Radius.circular(20),
+          topRight: Radius.circular(20),
+          bottomLeft: Radius.circular(20),
+        ),
+        color: Colors.cyan.withOpacity(0.2),
+        border: Border.all(color: Colors.cyan.withOpacity(0.5), width: 1.5),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withOpacity(0.2),
+            blurRadius: 10.0,
+            spreadRadius: 2.0,
+          ),
+        ],
+      ),
+      child: Center(
+        child: Icon(icon, size: 30, color: Colors.cyan),
       ),
     );
   }

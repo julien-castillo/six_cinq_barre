@@ -2,10 +2,7 @@ import 'dart:async';
 import 'dart:ui';
 import 'package:app_six_cinq_barre/functions.dart';
 import 'package:app_six_cinq_barre/gsheet_setup.dart';
-// import 'package:app_six_cinq_barre/main.dart';
-// import 'package:app_six_cinq_barre/pages/navigation_wrapper.dart';
 import 'package:flutter/material.dart';
-// import 'package:shared_preferences/shared_preferences.dart';
 
 class ConcertPage extends StatefulWidget {
   const ConcertPage({super.key});
@@ -47,19 +44,8 @@ class _ConcertPageState extends State<ConcertPage> {
           ? const Center(child: CircularProgressIndicator(color: Colors.cyan))
           : ListView.builder(
               padding: const EdgeInsets.all(16.0),
-                            itemCount: dataFromSheet.length,
-
+              itemCount: dataFromSheet.length,
               itemBuilder: (context, index) {
-                // if (index == dataFromSheet.length) {
-                //   // Affiche le bouton "Accueil" après le dernier élément
-                //   return Column(
-                //     crossAxisAlignment: CrossAxisAlignment.end,
-                //     children: [
-                //       const SizedBox(height: 10),
-                //       _buildGlassmorphicButton(context, Icons.home, 'Accueil'),
-                //     ],
-                //   );
-                // }
                 final row = dataFromSheet[index];
                 return Padding(
                   padding: const EdgeInsets.symmetric(vertical: 10.0),
@@ -75,81 +61,8 @@ class _ConcertPageState extends State<ConcertPage> {
                 );
               },
             ),
-      // floatingActionButtonLocation: FloatingActionButtonLocation.endDocked,
-      // floatingActionButton: Padding(
-      //   padding: const EdgeInsets.only(bottom: 48.0), // Ajuste la valeur ici
-      //   child: GestureDetector(
-      //     onTap: () {
-      //       Navigator.pushReplacement(
-      //         context,
-      //         MaterialPageRoute(builder: (context) => const MyApp()),
-      //       );
-      //     },
-      //     child: _buildGlassmorphicButton(context, Icons.home, 'Accueil'),
-      //   ),
-      // ),
     );
   }
-
-  // Widget _buildGlassmorphicRectangleConcert(
-  //   BuildContext context,
-  //   IconData icon,
-  //   String programme,
-  //   String date,
-  //   String heure,
-  //   String lieu,
-  //   String informationsConcert,
-
-  // ) {
-  //   return Container(
-  //     padding: const EdgeInsets.all(16.0),
-  //     decoration: BoxDecoration(
-  //       borderRadius: BorderRadius.circular(20),
-  //       color: Colors.cyan.withOpacity(0.2),
-  //       border: Border.all(color: Colors.cyan.withOpacity(0.5), width: 1.5),
-  //       boxShadow: [
-  //         BoxShadow(
-  //           color: Colors.black.withOpacity(0.2),
-  //           blurRadius: 10.0,
-  //           spreadRadius: 2.0,
-  //         ),
-  //       ],
-  //     ),
-  //     child: Column(
-  //       mainAxisSize: MainAxisSize.min,
-  //       children: [
-  //         Row(
-  //           mainAxisAlignment: MainAxisAlignment.center,
-  //           children: [
-  //             Icon(icon, size: 30, color: Colors.cyan),
-  //             const SizedBox(width: 10),
-  //             Text(
-  //               programme,
-  //               style: const TextStyle(fontSize: 20, color: Colors.cyan),
-  //             ),
-  //           ],
-  //         ),
-  //         const SizedBox(height: 10),
-  //         Text(
-  //           '$date à $heure',
-  //           style: const TextStyle(fontSize: 18, color: Colors.orange),
-  //         ),
-  //         const SizedBox(height: 10),
-  //         Text(
-  //           'Lieu : $lieu',
-  //           style: const TextStyle(fontSize: 18, color: Colors.white),
-  //         ),
-  //         const SizedBox(height: 10),
-  //         Text(
-  //           informationsConcert,
-  //           textAlign: TextAlign.center,
-  //           style: const TextStyle(fontSize: 18, color: Colors.white),
-  //         ),
-  //         const SizedBox(height: 10),
-  //       ],
-  //     ),
-  //   );
-  // }
 
   Widget _buildGlassmorphicRectangleConcert(
     BuildContext context,
@@ -296,47 +209,4 @@ class _ConcertPageState extends State<ConcertPage> {
       },
     );
   }
-
-  // Widget _buildGlassmorphicButton(
-  //     BuildContext context, IconData icon, String title) {
-  //   return GestureDetector(
-  //     onTap: () async {
-  //       final prefs = await SharedPreferences.getInstance();
-  //       final musicianName = prefs.getString('musicianName') ?? 'Musicien';
-  //       Navigator.pushAndRemoveUntil(
-  //         context,
-  //         MaterialPageRoute(
-  //           builder: (context) => NavigationWrapper(
-  //             initialIndex: 0,
-  //             musicianName: musicianName,
-  //           ),
-  //         ),
-  //         (Route<dynamic> route) => false,
-  //       );
-  //     },
-  //     child: Container(
-  //       width: 60,
-  //       height: 60,
-  //       decoration: BoxDecoration(
-  //         borderRadius: const BorderRadius.only(
-  //           topLeft: Radius.circular(20),
-  //           topRight: Radius.circular(20),
-  //           bottomLeft: Radius.circular(20),
-  //         ),
-  //         color: Colors.cyan.withOpacity(0.2),
-  //         border: Border.all(color: Colors.cyan.withOpacity(0.5), width: 1.5),
-  //         boxShadow: [
-  //           BoxShadow(
-  //             color: Colors.black.withOpacity(0.2),
-  //             blurRadius: 10.0,
-  //             spreadRadius: 2.0,
-  //           ),
-  //         ],
-  //       ),
-  //       child: Center(
-  //         child: Icon(icon, size: 30, color: Colors.cyan),
-  //       ),
-  //     ),
-  //   );
-  // }
 }

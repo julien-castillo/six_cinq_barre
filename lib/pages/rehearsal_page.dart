@@ -1,6 +1,5 @@
 import 'dart:async';
 import 'dart:ui';
-import 'dart:math'; // Ajouté pour utiliser Random
 import 'package:app_six_cinq_barre/functions.dart';
 import 'package:app_six_cinq_barre/gsheet_setup.dart';
 import 'package:flutter/material.dart';
@@ -25,21 +24,20 @@ class _RehearsalPageState extends State<RehearsalPage> {
   }
 
   Future<void> readDataFromSheet() async {
-  dataFromSheet = (await gsheetRehearsalsDetails!.values.map.allRows())!;
-  if (dataFromSheet.isNotEmpty) {
-    var closestData = getClosestFutureDate(dataFromSheet);
-    closestDate = closestData?['date'];
-    closestIndex = closestData?['index']; // Indice de la répétition la plus proche
-  } else {
-    closestDate = null;
+    dataFromSheet = (await gsheetRehearsalsDetails!.values.map.allRows())!;
+    if (dataFromSheet.isNotEmpty) {
+      var closestData = getClosestFutureDate(dataFromSheet);
+      closestDate = closestData?['date'];
+      closestIndex =
+          closestData?['index']; // Indice de la répétition la plus proche
+    } else {
+      closestDate = null;
+    }
+    setState(() {});
   }
-  setState(() {});
-}
 
   @override
   Widget build(BuildContext context) {
-    // final remainingText = formatDaysUntilNextRehearsal(closestDate);
-
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.black,
@@ -50,40 +48,6 @@ class _RehearsalPageState extends State<RehearsalPage> {
         color: Colors.black, // Fond noir
         child: Stack(
           children: [
-            // Ajout des cercles de couleurs aléatoires avec flou
-            ...List.generate(10, (index) {
-              final random = Random();
-              final size = random.nextDouble() * 100 +
-                  50; // Taille des cercles entre 50 et 150 pixels
-              final top =
-                  random.nextDouble() * MediaQuery.of(context).size.height;
-              final left =
-                  random.nextDouble() * MediaQuery.of(context).size.width;
-              final color = Color.fromARGB(
-                100 +
-                    random.nextInt(
-                        156), // Transparence pour créer un effet de superposition
-                random.nextInt(256),
-                random.nextInt(256),
-                random.nextInt(256),
-              );
-
-              return Positioned(
-                top: top,
-                left: left,
-                child: BackdropFilter(
-                  filter: ImageFilter.blur(sigmaX: 5, sigmaY: 0), // Flou ajouté
-                  child: Container(
-                    width: size,
-                    height: size,
-                    decoration: BoxDecoration(
-                      color: color,
-                      shape: BoxShape.circle,
-                    ),
-                  ),
-                ),
-              );
-            }),
             dataFromSheet.isEmpty
                 ? const Center(
                     child: CircularProgressIndicator(color: Colors.cyan),
@@ -104,9 +68,8 @@ class _RehearsalPageState extends State<RehearsalPage> {
                             final heure = row['heure'];
                             final programme = row['programme'];
                             final formation = row['formation'];
-
-                            final isClosestFutureDate = closestIndex != -1 && index == closestIndex;
-
+                            final isClosestFutureDate =
+                                closestIndex != -1 && index == closestIndex;
                             return GestureDetector(
                               onTap: () {
                                 showDialog(
@@ -167,7 +130,7 @@ class _RehearsalPageState extends State<RehearsalPage> {
                                                           fontSize: 20,
                                                           fontWeight:
                                                               FontWeight.w500)),
-                                                              const Divider(
+                                                  const Divider(
                                                       color: Colors.grey),
                                                   Text('$lieu : ',
                                                       style: const TextStyle(
@@ -175,12 +138,14 @@ class _RehearsalPageState extends State<RehearsalPage> {
                                                           fontSize: 20,
                                                           fontWeight:
                                                               FontWeight.w500)),
-                                                  Text('$adresse',
-                                                      style: const TextStyle(
-                                                        fontSize: 18,
-                                                        color: Colors.white,
-                                                      ),
-                                                      textAlign: TextAlign.center,),
+                                                  Text(
+                                                    '$adresse',
+                                                    style: const TextStyle(
+                                                      fontSize: 18,
+                                                      color: Colors.white,
+                                                    ),
+                                                    textAlign: TextAlign.center,
+                                                  ),
                                                   const Divider(
                                                       color: Colors.grey),
                                                   const Text('Programme : ',
@@ -189,13 +154,14 @@ class _RehearsalPageState extends State<RehearsalPage> {
                                                           fontSize: 20,
                                                           fontWeight:
                                                               FontWeight.w500)),
-                                                  Text('$programme',
-                                                      style: const TextStyle(
-                                                        fontSize: 18,
-                                                        color: Colors.white,
-                                                      ),
-                                                      textAlign: TextAlign.center,
-                                                      ),
+                                                  Text(
+                                                    '$programme',
+                                                    style: const TextStyle(
+                                                      fontSize: 18,
+                                                      color: Colors.white,
+                                                    ),
+                                                    textAlign: TextAlign.center,
+                                                  ),
                                                   const Divider(
                                                       color: Colors.grey),
                                                   const Text('Formation : ',
@@ -234,99 +200,79 @@ class _RehearsalPageState extends State<RehearsalPage> {
                               },
                               child: Card(
                                 color: isClosestFutureDate
-                                    ? Colors.orange.withOpacity(0.8)
+                                    ? Colors.cyan.withOpacity(0.3)
                                     : Colors.black.withOpacity(0.1),
                                 margin: const EdgeInsets.symmetric(
-                                    vertical: 8, horizontal: 16),
-                                shape: const RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.only(
-                                    topRight: Radius.circular(30),
-                                    bottomLeft: Radius.circular(30),
-                                  ),
+                                    vertical: 10, horizontal: 16),
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(30),
                                 ),
                                 elevation: 10,
-                                shadowColor: Colors.cyan.withOpacity(0.2),
                                 child: ClipRRect(
-                                  borderRadius: const BorderRadius.only(
-                                    topRight: Radius.circular(30),
-                                    bottomLeft: Radius.circular(30),
-                                  ),
-                                  child: BackdropFilter(
-                                    filter: ImageFilter.blur(
-                                        sigmaX: 30.0, sigmaY: 30.0),
-                                    child: Container(
-                                      decoration: BoxDecoration(
-                                        borderRadius: const BorderRadius.only(
-                                          topRight: Radius.circular(30),
-                                          bottomLeft: Radius.circular(30),
-                                        ),
-                                        border: Border.all(
-                                          color: Colors.white.withOpacity(0.2),
-                                          width: 0.5,
-                                        ),
-                                        gradient: LinearGradient(
-                                          colors: [
-                                            Colors.white.withOpacity(0.2),
-                                            Colors.white.withOpacity(0.05),
-                                          ],
-                                          begin: Alignment.topLeft,
-                                          end: Alignment.bottomRight,
-                                        ),
+                                  borderRadius: BorderRadius.circular(30),
+                                  child: Container(
+                                    padding: isClosestFutureDate
+                                        ? EdgeInsets.all(12.0)
+                                        : EdgeInsets.all(4.0),
+                                    decoration: BoxDecoration(
+                                      color: Colors.cyan.withOpacity(0.2),
+                                      borderRadius: BorderRadius.circular(30),
+                                      border: isClosestFutureDate
+                                          ? Border.all(
+                                              color: Colors.orange, width: 3)
+                                          : Border.all(
+                                              color: Colors.cyan,
+                                              width: 1,
+                                            ),
+                                    ),
+                                    child: ListTile(
+                                      leading: const Icon(
+                                        Icons.music_note,
+                                        size: 30,
+                                        color: Colors.cyanAccent,
                                       ),
-                                      child: ListTile(
-                                        leading: const Icon(
-                                          Icons.music_note,
-                                          size: 30,
-                                          color: Colors.cyanAccent,
-                                        ),
-                                        title: Column(
-                                          crossAxisAlignment:
-                                              CrossAxisAlignment.start,
-                                          children: [
-                                            Text(
-                                              '$date ($heure)',
-                                              style: const TextStyle(
+                                      title: Column(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        children: [
+                                          Text(
+                                            '$date ($heure)',
+                                            style: TextStyle(
+                                              fontSize: 18,
+                                              fontWeight: FontWeight.bold,
+                                              color: isClosestFutureDate
+                                                  ? Colors.orange
+                                                  : Colors.cyan,
+                                            ),
+                                          ),
+                                          Text(
+                                            '$lieu',
+                                            style: const TextStyle(
                                                 fontSize: 18,
-                                                fontWeight: FontWeight.bold,
-                                                color: Colors.white,
-                                              ),
-                                            ),
-                                            Text(
-                                              '$lieu',
-                                              style: const TextStyle(
-                                                  fontSize: 18,
-                                                  color: Colors.white),
-                                            ),
-                                            RichText(
-                                              text: TextSpan(
-                                                children: [
-                                                  const TextSpan(
-                                                    text: 'Formation: ',
-                                                    style: TextStyle(
-                                                      fontSize: 16,
-                                                      color: Colors.white,
-                                                    ),
+                                                color: Colors.white),
+                                          ),
+                                          RichText(
+                                            text: TextSpan(
+                                              children: [
+                                                const TextSpan(
+                                                  text: 'Formation: ',
+                                                  style: TextStyle(
+                                                    fontSize: 16,
+                                                    color: Colors.white,
                                                   ),
-                                                  TextSpan(
-                                                    text: '$formation',
-                                                    style: const TextStyle(
-                                                      fontSize: 16,
-                                                      color: Colors.yellow,
-                                                      fontWeight:
-                                                          FontWeight.bold,
-                                                    ),
+                                                ),
+                                                TextSpan(
+                                                  text: '$formation',
+                                                  style: const TextStyle(
+                                                    fontSize: 16,
+                                                    color: Colors.cyan,
+                                                    fontWeight: FontWeight.w800,
                                                   ),
-                                                ],
-                                              ),
+                                                ),
+                                              ],
                                             ),
-                                          ],
-                                        ),
-                                        // subtitle: const Text(
-                                        //   'Autre info si besoin',
-                                        //   style: TextStyle(
-                                        //       fontSize: 16,
-                                        //       color: Colors.white),
-                                        // ),
+                                          ),
+                                        ],
                                       ),
                                     ),
                                   ),

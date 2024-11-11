@@ -108,7 +108,7 @@ class _AbsencesPageState extends State<AbsencesPage> {
                           color: Colors.cyan.withOpacity(0.2),
                           borderRadius: BorderRadius.circular(12),
                           border: Border.all(
-                            color: rehearsal[date] ? Colors.red : Colors.green,
+                            color: rehearsal[date] ? Colors.deepOrange : Colors.green,
                             width: 1,
                           ),
                           boxShadow: [
@@ -129,7 +129,7 @@ class _AbsencesPageState extends State<AbsencesPage> {
                                 fontSize: 18,
                                 fontWeight: FontWeight.bold,
                                 color:
-                                    rehearsal[date] ? Colors.red : Colors.green,
+                                    rehearsal[date] ? Colors.deepOrange : Colors.green,
                               ),
                             ),
                             const SizedBox(height: 10),
@@ -148,7 +148,7 @@ class _AbsencesPageState extends State<AbsencesPage> {
                               sliderRotate: false,
                               sliderButtonIconPadding: 14,
                               innerColor:
-                                  rehearsal[date] ? Colors.red : Colors.green,
+                                  rehearsal[date] ? Colors.deepOrange : Colors.green,
                               outerColor: Colors.cyan.withOpacity(0.2),
                               textStyle: const TextStyle(
                                 color: Colors.white,

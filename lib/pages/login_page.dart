@@ -26,10 +26,10 @@ class _LoginPageState extends State<LoginPage> {
   }
 
   void _toggleRememberMe(bool? value) {
-  setState(() {
-    _rememberMe = value ?? false;
-  });
-}
+    setState(() {
+      _rememberMe = value ?? false;
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -101,23 +101,23 @@ class _LoginPageState extends State<LoginPage> {
   }
 
   Widget _buildCheckbox() {
-  return Theme(
-    data: Theme.of(context).copyWith(
-      unselectedWidgetColor: Colors.cyan,
-    ),
-    child: CheckboxListTile(
-      title: const Text(
-        'Me connecter automatiquement lors de ma prochaine visite',
-        style: TextStyle(color: Colors.cyan),
+    return Theme(
+      data: Theme.of(context).copyWith(
+        unselectedWidgetColor: Colors.cyan,
       ),
-      value: _rememberMe,
-      onChanged: _toggleRememberMe,
-      controlAffinity: ListTileControlAffinity.leading,
-      activeColor: Colors.cyan,
-      checkColor: Colors.white,
-    ),
-  );
-}
+      child: CheckboxListTile(
+        title: const Text(
+          'Me connecter automatiquement lors de ma prochaine visite',
+          style: TextStyle(color: Colors.cyan),
+        ),
+        value: _rememberMe,
+        onChanged: _toggleRememberMe,
+        controlAffinity: ListTileControlAffinity.leading,
+        activeColor: Colors.cyan,
+        checkColor: Colors.white,
+      ),
+    );
+  }
 
   Widget _buildLoginButton(BuildContext context) {
     return Column(
@@ -199,7 +199,8 @@ class _LoginPageState extends State<LoginPage> {
         });
 
         final prefs = await SharedPreferences.getInstance();
-        await prefs.setString('musicianName', result['musicianName'] ?? 'Musicien');
+        await prefs.setString(
+            'musicianName', result['musicianName'] ?? 'Musicien');
         await prefs.setBool('rememberMe', _rememberMe);
         await prefs.setBool('isAdmin', result['isAdmin'] ?? false);
         final musicianName = prefs.getString('musicianName') ?? 'Musicien';

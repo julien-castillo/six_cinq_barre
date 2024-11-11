@@ -266,7 +266,6 @@ class _HomePageState extends State<HomePage> {
               bottomLeft: Radius.circular(30),
             ),
           ),
-          // const SizedBox.shrink(),
         ],
       ),
     );

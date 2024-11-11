@@ -71,7 +71,7 @@ class _ContributionPageState extends State<ContributionPage> {
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         const SizedBox(height: 15),
-                        _buildGlassmorphicRectangle1(
+                        _buildGlassmorphicRectangleHeader(
                           context,
                           Icons.euro,
                           "Cotisation",
@@ -81,13 +81,13 @@ class _ContributionPageState extends State<ContributionPage> {
                               "Texte manquant",
                         ),
                         const SizedBox(height: 15),
-                        _buildGlassmorphicRectangleCotisation(
+                        _buildGlassmorphicRectangleStatusCotisation(
                           context,
                           musicianName,
                           cotisationPayee,
                         ),
                         const SizedBox(height: 15),
-                        _buildGlassmorphicRectangle2(
+                        _buildGlassmorphicRectangleContributionPrice(
                           context,
                           "Montant de la cotisation :",
                           dataFromSheet![0]['prix'] ?? "Prix manquant",
@@ -152,7 +152,7 @@ class _ContributionPageState extends State<ContributionPage> {
     );
   }
 
-  Widget _buildGlassmorphicRectangle1(BuildContext context, IconData icon,
+  Widget _buildGlassmorphicRectangleHeader(BuildContext context, IconData icon,
       String title, String subtitle, String text) {
     return Container(
       width: 340,
@@ -200,7 +200,7 @@ class _ContributionPageState extends State<ContributionPage> {
     );
   }
 
-  Widget _buildGlassmorphicRectangleCotisation(
+  Widget _buildGlassmorphicRectangleStatusCotisation(
       BuildContext context, String title, bool cotisationPayee) {
     return Container(
       width: 340,
@@ -209,8 +209,8 @@ class _ContributionPageState extends State<ContributionPage> {
         borderRadius: BorderRadius.circular(20),
         color: Colors.cyan.withOpacity(0.2),
         border: cotisationPayee
-        ? Border.all(color: Colors.green.withOpacity(0.5), width: 2.5)
-        : Border.all(color: Colors.red.withOpacity(0.5), width: 2.5),
+            ? Border.all(color: Colors.green.withOpacity(0.5), width: 2.5)
+            : Border.all(color: Colors.red.withOpacity(0.5), width: 2.5),
         boxShadow: [
           BoxShadow(
             color: Colors.black.withOpacity(0.2),
@@ -220,37 +220,37 @@ class _ContributionPageState extends State<ContributionPage> {
         ],
       ),
       child: Column(
-  mainAxisSize: MainAxisSize.min,
-  children: [
-    Text(
-      "- $musicianName - ",
-      style: const TextStyle(fontSize: 20, color: Colors.cyan),
-    ),
-    const SizedBox(height: 10),
-    Icon(
-      cotisationPayee ? Icons.check_circle : Icons.warning,
-      color: cotisationPayee ? Colors.green : Colors.red,
-      size: 24,
-    ),
-    const SizedBox(height: 8),
-    Flexible(
-      child: Text(
-        cotisationPayee
-            ? "Ta cotisation est réglée pour cette saison, merci !"
-            : "N'oublie pas de régler ta cotisation !",
-        style: TextStyle(
-          fontSize: 18,
-          color: cotisationPayee ? Colors.green : Colors.red,
-        ),
-        textAlign: TextAlign.center,
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Text(
+            "- $musicianName - ",
+            style: const TextStyle(fontSize: 20, color: Colors.cyan),
+          ),
+          const SizedBox(height: 10),
+          Icon(
+            cotisationPayee ? Icons.check_circle : Icons.warning,
+            color: cotisationPayee ? Colors.green : Colors.red,
+            size: 24,
+          ),
+          const SizedBox(height: 8),
+          Flexible(
+            child: Text(
+              cotisationPayee
+                  ? "Ta cotisation est réglée pour cette saison, merci !"
+                  : "N'oublie pas de régler ta cotisation !",
+              style: TextStyle(
+                fontSize: 18,
+                color: cotisationPayee ? Colors.green : Colors.red,
+              ),
+              textAlign: TextAlign.center,
+            ),
+          ),
+        ],
       ),
-    ),
-  ],
-),
     );
   }
 
-  Widget _buildGlassmorphicRectangle2(
+  Widget _buildGlassmorphicRectangleContributionPrice(
       BuildContext context, String title, String subtitle) {
     return Container(
       width: 340,

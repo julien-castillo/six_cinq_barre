@@ -40,22 +40,22 @@ class _NavigationWrapperState extends State<NavigationWrapper> {
       appBar: AppBar(
         centerTitle: true,
         backgroundColor: Colors.cyan,
-        title:  [
+        title: [
           Text("Accueil - ${widget.musicianName}"),
           Text("Liste des Répétitions"),
           Text("Concerts"),
         ][_currentIndex],
         actions: [
-        IconButton(
-          icon: const Icon(Icons.logout),
-          onPressed: () {
-            Navigator.pushReplacement(
-              context,
-              MaterialPageRoute(builder: (context) => LoginPage()),
-            );
-          },
-        ),
-      ],
+          IconButton(
+            icon: const Icon(Icons.logout),
+            onPressed: () {
+              Navigator.pushReplacement(
+                context,
+                MaterialPageRoute(builder: (context) => LoginPage()),
+              );
+            },
+          ),
+        ],
       ),
       body: Column(
         children: [
@@ -99,7 +99,8 @@ class _NavigationWrapperState extends State<NavigationWrapper> {
         Icon(icon, size: 30, color: isSelected ? Colors.cyan : Colors.white),
         const SizedBox(height: 1),
         Text(label,
-            style: TextStyle(color: isSelected ? Colors.black : Colors.white, fontSize: 15)),
+            style: TextStyle(
+                color: isSelected ? Colors.black : Colors.white, fontSize: 15)),
       ],
     );
   }

@@ -115,36 +115,8 @@ class _ResourcesPageState extends State<ResourcesPage> {
                     },
                   ),
                 ),
-                // const SizedBox(height: 10),
-                // Align(
-                //   alignment: Alignment.centerRight,
-                //   child:
-                //       _buildGlassmorphicButton(context, Icons.home, 'Accueil'),
-                // ),
               ],
             ),
-      // floatingActionButtonLocation: FloatingActionButtonLocation.endDocked,
-      // floatingActionButton: Padding(
-      //   padding: const EdgeInsets.only(bottom: 48.0),
-      //   child: GestureDetector(
-      //     onTap: () async {
-      //       final prefs = await SharedPreferences.getInstance();
-      //       final musicianName = prefs.getString('musicianName') ?? 'Musicien';
-
-      //       Navigator.pushAndRemoveUntil(
-      //         context,
-      //         MaterialPageRoute(
-      //           builder: (context) => NavigationWrapper(
-      //             initialIndex: 0,
-      //             musicianName: musicianName,
-      //           ),
-      //         ),
-      //         (Route<dynamic> route) => false,
-      //       );
-      //     },
-      //     child: _buildGlassmorphicButton(context, Icons.home, 'Accueil'),
-      //   ),
-      // ),
     );
   }
 
