@@ -169,9 +169,21 @@ class $AssetsImagesGen {
 class $AssetsImagesMusiciensGen {
   const $AssetsImagesMusiciensGen();
 
+  /// File path: assets/images/musiciens/alice_laugier.jpeg
+  AssetGenImage get aliceLaugier =>
+      const AssetGenImage('assets/images/musiciens/alice_laugier.jpeg');
+
+  /// File path: assets/images/musiciens/camille_gaillard.jpg
+  AssetGenImage get camilleGaillard =>
+      const AssetGenImage('assets/images/musiciens/camille_gaillard.jpg');
+
   /// File path: assets/images/musiciens/catherine_rochard.jpg
   AssetGenImage get catherineRochard =>
       const AssetGenImage('assets/images/musiciens/catherine_rochard.jpg');
+
+  /// File path: assets/images/musiciens/cecile_roux.jpg
+  AssetGenImage get cecileRoux =>
+      const AssetGenImage('assets/images/musiciens/cecile_roux.jpg');
 
   /// File path: assets/images/musiciens/florent_boyer.jpg
   AssetGenImage get florentBoyer =>
@@ -191,7 +203,10 @@ class $AssetsImagesMusiciensGen {
 
   /// List of all assets
   List<AssetGenImage> get values => [
+        aliceLaugier,
+        camilleGaillard,
         catherineRochard,
+        cecileRoux,
         florentBoyer,
         jessicaHackett,
         julienCastillo,
