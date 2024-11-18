@@ -180,5 +180,6 @@ String normalizeName(String name) {
   return name
       .toLowerCase()
       .replaceAll(' ', '_')
+      .replaceAll('-', '_')
       .replaceAll(RegExp(r'[^a-z0-9_]'), '');
 }

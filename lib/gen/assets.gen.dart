@@ -169,9 +169,9 @@ class $AssetsImagesGen {
 class $AssetsImagesMusiciensGen {
   const $AssetsImagesMusiciensGen();
 
-  /// File path: assets/images/musiciens/alice_laugier.jpg
+  /// File path: assets/images/musiciens/alice_laugier.png
   AssetGenImage get aliceLaugier =>
-      const AssetGenImage('assets/images/musiciens/alice_laugier.jpg');
+      const AssetGenImage('assets/images/musiciens/alice_laugier.png');
 
   /// File path: assets/images/musiciens/camille_gaillard.jpg
   AssetGenImage get camilleGaillard =>
