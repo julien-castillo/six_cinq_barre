@@ -169,9 +169,9 @@ class $AssetsImagesGen {
 class $AssetsImagesMusiciensGen {
   const $AssetsImagesMusiciensGen();
 
-  /// File path: assets/images/musiciens/alice_laugier.jpeg
+  /// File path: assets/images/musiciens/alice_laugier.jpg
   AssetGenImage get aliceLaugier =>
-      const AssetGenImage('assets/images/musiciens/alice_laugier.jpeg');
+      const AssetGenImage('assets/images/musiciens/alice_laugier.jpg');
 
   /// File path: assets/images/musiciens/camille_gaillard.jpg
   AssetGenImage get camilleGaillard =>
@@ -185,6 +185,10 @@ class $AssetsImagesMusiciensGen {
   AssetGenImage get cecileRoux =>
       const AssetGenImage('assets/images/musiciens/cecile_roux.jpg');
 
+  /// File path: assets/images/musiciens/emilie_tain.jpg
+  AssetGenImage get emilieTain =>
+      const AssetGenImage('assets/images/musiciens/emilie_tain.jpg');
+
   /// File path: assets/images/musiciens/florent_boyer.jpg
   AssetGenImage get florentBoyer =>
       const AssetGenImage('assets/images/musiciens/florent_boyer.jpg');
@@ -197,9 +201,17 @@ class $AssetsImagesMusiciensGen {
   AssetGenImage get julienCastillo =>
       const AssetGenImage('assets/images/musiciens/julien_castillo.png');
 
+  /// File path: assets/images/musiciens/maite_platero_jaubert.jpg
+  AssetGenImage get maitePlateroJaubert =>
+      const AssetGenImage('assets/images/musiciens/maite_platero_jaubert.jpg');
+
   /// File path: assets/images/musiciens/sarah_tapan.jpg
   AssetGenImage get sarahTapan =>
       const AssetGenImage('assets/images/musiciens/sarah_tapan.jpg');
+
+  /// File path: assets/images/musiciens/verene_gribonval.jpg
+  AssetGenImage get vereneGribonval =>
+      const AssetGenImage('assets/images/musiciens/verene_gribonval.jpg');
 
   /// List of all assets
   List<AssetGenImage> get values => [
@@ -207,10 +219,13 @@ class $AssetsImagesMusiciensGen {
         camilleGaillard,
         catherineRochard,
         cecileRoux,
+        emilieTain,
         florentBoyer,
         jessicaHackett,
         julienCastillo,
-        sarahTapan
+        maitePlateroJaubert,
+        sarahTapan,
+        vereneGribonval
       ];
 }
 
