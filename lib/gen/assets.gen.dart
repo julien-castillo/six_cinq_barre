@@ -173,6 +173,10 @@ class $AssetsImagesMusiciensGen {
   AssetGenImage get aliceLaugier =>
       const AssetGenImage('assets/images/musiciens/alice_laugier.png');
 
+  /// File path: assets/images/musiciens/benedicte_reynaud.jpg
+  AssetGenImage get benedicteReynaud =>
+      const AssetGenImage('assets/images/musiciens/benedicte_reynaud.jpg');
+
   /// File path: assets/images/musiciens/camille_gaillard.jpg
   AssetGenImage get camilleGaillard =>
       const AssetGenImage('assets/images/musiciens/camille_gaillard.jpg');
@@ -216,6 +220,7 @@ class $AssetsImagesMusiciensGen {
   /// List of all assets
   List<AssetGenImage> get values => [
         aliceLaugier,
+        benedicteReynaud,
         camilleGaillard,
         catherineRochard,
         cecileRoux,
