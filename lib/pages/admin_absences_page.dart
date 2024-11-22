@@ -314,7 +314,7 @@ class _AdminAbsencesPageState extends State<AdminAbsencesPage> {
           borderRadius: const BorderRadius.only(
             topLeft: Radius.circular(20),
             topRight: Radius.circular(20),
-            bottomLeft: Radius.circular(20),
+            bottomRight: Radius.circular(20),
           ),
           color: Colors.cyan.withOpacity(0.2),
           border: Border.all(color: Colors.cyan.withOpacity(0.5), width: 1.5),

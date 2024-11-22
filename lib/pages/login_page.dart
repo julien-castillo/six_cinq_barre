@@ -145,9 +145,9 @@ class _LoginPageState extends State<LoginPage> {
             children: [
               SlideAction(
                 onSubmit: _isLoading ? null : () => _verifyAndNavigate(context),
-                text: "Connexion",
+                text: "Glisser pour vous connecter",
                 sliderButtonIcon: const Icon(
-                  Icons.lock_open_outlined,
+                  Icons.arrow_circle_right,
                   color: Colors.white,
                 ),
                 sliderRotate: false,

@@ -189,6 +189,10 @@ class $AssetsImagesMusiciensGen {
   AssetGenImage get cecileRoux =>
       const AssetGenImage('assets/images/musiciens/cecile_roux.jpg');
 
+  /// File path: assets/images/musiciens/coralie_cordroch.jpg
+  AssetGenImage get coralieCordroch =>
+      const AssetGenImage('assets/images/musiciens/coralie_cordroch.jpg');
+
   /// File path: assets/images/musiciens/emilie_tain.jpg
   AssetGenImage get emilieTain =>
       const AssetGenImage('assets/images/musiciens/emilie_tain.jpg');
@@ -224,6 +228,7 @@ class $AssetsImagesMusiciensGen {
         camilleGaillard,
         catherineRochard,
         cecileRoux,
+        coralieCordroch,
         emilieTain,
         florentBoyer,
         jessicaHackett,
