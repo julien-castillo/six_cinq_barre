@@ -205,6 +205,10 @@ class $AssetsImagesMusiciensGen {
   AssetGenImage get fabienneBertin =>
       const AssetGenImage('assets/images/musiciens/fabienne_bertin.jpg');
 
+  /// File path: assets/images/musiciens/fanny_constant.jpg
+  AssetGenImage get fannyConstant =>
+      const AssetGenImage('assets/images/musiciens/fanny_constant.jpg');
+
   /// File path: assets/images/musiciens/florent_boyer.jpg
   AssetGenImage get florentBoyer =>
       const AssetGenImage('assets/images/musiciens/florent_boyer.jpg');
@@ -220,6 +224,10 @@ class $AssetsImagesMusiciensGen {
   /// File path: assets/images/musiciens/maite_platero_jaubert.jpg
   AssetGenImage get maitePlateroJaubert =>
       const AssetGenImage('assets/images/musiciens/maite_platero_jaubert.jpg');
+
+  /// File path: assets/images/musiciens/matthieu_duchemin.jpg
+  AssetGenImage get matthieuDuchemin =>
+      const AssetGenImage('assets/images/musiciens/matthieu_duchemin.jpg');
 
   /// File path: assets/images/musiciens/nicolas_gillier.jpg
   AssetGenImage get nicolasGillier =>
@@ -244,10 +252,12 @@ class $AssetsImagesMusiciensGen {
         coralieCordroch,
         emilieTain,
         fabienneBertin,
+        fannyConstant,
         florentBoyer,
         jessicaHackett,
         julienCastillo,
         maitePlateroJaubert,
+        matthieuDuchemin,
         nicolasGillier,
         sarahTapan,
         vereneGribonval
