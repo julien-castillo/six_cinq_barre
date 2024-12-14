@@ -221,6 +221,10 @@ class $AssetsImagesMusiciensGen {
   AssetGenImage get julienCastillo =>
       const AssetGenImage('assets/images/musiciens/julien_castillo.png');
 
+  /// File path: assets/images/musiciens/lison_grappe.jpg
+  AssetGenImage get lisonGrappe =>
+      const AssetGenImage('assets/images/musiciens/lison_grappe.jpg');
+
   /// File path: assets/images/musiciens/maite_platero_jaubert.jpg
   AssetGenImage get maitePlateroJaubert =>
       const AssetGenImage('assets/images/musiciens/maite_platero_jaubert.jpg');
@@ -256,6 +260,7 @@ class $AssetsImagesMusiciensGen {
         florentBoyer,
         jessicaHackett,
         julienCastillo,
+        lisonGrappe,
         maitePlateroJaubert,
         matthieuDuchemin,
         nicolasGillier,
